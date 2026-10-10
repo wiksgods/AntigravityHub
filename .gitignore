@@ -1,0 +1,25 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ist/
+[Pp]ublish/
+
+## Visual Studio & IDE
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.idea/
+.vscode/
+
+## Logs and diagnostics
+*.log
+*.crash.log
+
+## OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

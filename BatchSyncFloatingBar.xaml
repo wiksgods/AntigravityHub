@@ -1,0 +1,220 @@
+<Window x:Class="ProfileSwitchChrome.BatchSyncFloatingBar"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Điều Khiển Đồng Bộ - Antigravity"
+        Width="280" SizeToContent="Height"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        WindowStartupLocation="Manual"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        FontFamily="Segoe UI Variable Display, Segoe UI, sans-serif"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType">
+
+    <Window.Resources>
+        <!-- Floating Skip Button (Secondary Theme Button) -->
+        <Style x:Key="FloatingSkipBtn" TargetType="Button">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Background" Value="{DynamicResource ThemeSecondaryBtnBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeSecondaryBtnBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{DynamicResource ThemeSecondaryBtnFg}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource ThemeSecondaryBtnHoverBg}"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#38BDF8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource ThemeCardSubBg}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Floating Stop Button (Theme Danger Button) -->
+        <Style x:Key="FloatingStopBtn" TargetType="Button">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Background" Value="{DynamicResource ThemeDangerBtnBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeDangerBtnBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{DynamicResource ThemeDangerBtnFg}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource ThemeDangerBtnHoverBg}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1A0707"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Main Outer Container with Margin for DropShadow -->
+    <Grid Margin="10">
+        <!-- Floating Card styled with Dynamic Theme -->
+        <Border Background="{DynamicResource ThemeModalBg}" 
+                BorderBrush="{DynamicResource ThemeModalBorder}" 
+                BorderThickness="1" 
+                CornerRadius="12" Padding="12,10">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="18" Color="#000000" Opacity="0.18" Direction="270" ShadowDepth="3"/>
+            </Border.Effect>
+
+            <StackPanel>
+                <!-- Header: Icon, Title, Progress Pill, Drag Handle -->
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Icon / Brand Badge -->
+                    <Border Grid.Column="0" Width="22" Height="22" CornerRadius="11" 
+                            Background="{DynamicResource ThemeActiveHeroBadgeBg}" 
+                            BorderBrush="{DynamicResource ThemeActiveHeroBadgeBorder}" 
+                            BorderThickness="1" Margin="0,0,7,0" VerticalAlignment="Center">
+                        <TextBlock Text="⚡" FontSize="11" Foreground="{DynamicResource ThemeActiveHeroBadgeFg}" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <!-- Title -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="ĐỒNG BỘ GOOGLE" FontSize="10.5" FontWeight="Bold" 
+                                   Foreground="{DynamicResource ThemeTextPrimary}"/>
+                        <TextBlock Text="Điều khiển tiến trình" FontSize="9" 
+                                   Foreground="{DynamicResource ThemeTextSecondary}"/>
+                    </StackPanel>
+
+                    <!-- Progress Pill -->
+                    <Border Grid.Column="2" Background="{DynamicResource ThemeActiveStatusBadgeBg}" 
+                            BorderBrush="{DynamicResource ThemeActiveStatusBadgeBorder}" 
+                            BorderThickness="1" CornerRadius="8" Padding="6,2" Margin="0,0,5,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtProgressPill" Text="1 / 1" FontSize="10" FontWeight="Bold" 
+                                   Foreground="{DynamicResource ThemeGeminiLabelFg}"/>
+                    </Border>
+
+                    <!-- Drag Grip Indicator -->
+                    <Border Grid.Column="3" Width="20" Height="20" CornerRadius="4" Background="Transparent" 
+                            Cursor="SizeAll" ToolTip="Nhấp giữ chuột để kéo di chuyển" VerticalAlignment="Center">
+                        <TextBlock Text="⠿" FontSize="13" Foreground="{DynamicResource ThemeTextMuted}" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+
+                <!-- Current Account Card -->
+                <Border Background="{DynamicResource ThemeCardSubBg}" 
+                        BorderBrush="{DynamicResource ThemeCardSubBorder}" 
+                        BorderThickness="1" CornerRadius="8" Padding="8,7" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Account Avatar Monogram (matching main window account avatar) -->
+                        <Border Grid.Column="0" Width="26" Height="26" CornerRadius="13" 
+                                Background="{DynamicResource ThemeAccountAvatarBg}" 
+                                BorderBrush="{DynamicResource ThemeAccountAvatarBorder}" 
+                                BorderThickness="1" Margin="0,0,8,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="TxtAccountInitial" Text="G" 
+                                       Foreground="{DynamicResource ThemeAccountAvatarFg}" 
+                                       FontWeight="Bold" FontSize="12" 
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <!-- Account Email & Status -->
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="TxtAccountEmail" Text="email@gmail.com" FontSize="11.5" FontWeight="SemiBold" 
+                                       Foreground="{DynamicResource ThemeTextPrimary}" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="TxtStatusMessage" Text="Vui lòng bấm xác nhận trên trình duyệt..." 
+                                       FontSize="9.5" Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,1,0,0" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Auto-Click Sign In Option Toggle -->
+                <Border Background="{DynamicResource ThemeOptionCardBg}" 
+                        BorderBrush="{DynamicResource ThemeOptionCardBorder}" 
+                        BorderThickness="1" CornerRadius="7" Padding="8,4" Margin="0,0,0,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Tự động bấm Đăng nhập" FontSize="10" FontWeight="SemiBold" 
+                                       Foreground="{DynamicResource ThemeTextPrimary}"/>
+                            <TextBlock Text="Chỉ click khi phát hiện thấy nút" FontSize="8.5" 
+                                       Foreground="{DynamicResource ThemeTextSecondary}"/>
+                        </StackPanel>
+                        <CheckBox x:Name="ChkAutoClickFloating" Grid.Column="1" 
+                                  VerticalAlignment="Center" Margin="6,0,2,0" Cursor="Hand"
+                                  Click="ChkAutoClickFloating_Click"
+                                  ToolTip="Tự động bấm nút Đăng nhập / Sign in khi phát hiện thấy trên trang Google (mặc định tắt)"/>
+                    </Grid>
+                </Border>
+
+                <!-- Action Buttons: Skip and Stop -->
+                <Grid Margin="0,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="1.2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Skip Button -->
+                    <Button Grid.Column="0" Style="{StaticResource FloatingSkipBtn}" 
+                            Padding="6,6" Click="BtnSkip_Click"
+                            Content="Bỏ qua"
+                            ToolTip="Bỏ qua tài khoản này (hoặc bấm ✕ trên Chrome)"/>
+
+                    <!-- Stop Button -->
+                    <Button Grid.Column="2" Style="{StaticResource FloatingStopBtn}" 
+                            Padding="6,6" Click="BtnStop_Click"
+                            Content="Dừng đồng bộ"
+                            ToolTip="Dừng hoàn toàn toàn bộ tiến trình đồng bộ hàng loạt"/>
+                </Grid>
+
+                <!-- Helpful Hint -->
+                <TextBlock Text="Bấm ✕ trên Chrome để bỏ qua • Chỉ dừng khi ấn Dừng" 
+                           FontSize="9" Foreground="{DynamicResource ThemeTextMuted}" 
+                           HorizontalAlignment="Center" Margin="0,2,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
