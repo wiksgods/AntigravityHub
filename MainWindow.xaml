@@ -2541,7 +2541,7 @@
                         <StackPanel Grid.Column="0">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="👥 " FontSize="16" VerticalAlignment="Center"/>
-                                <TextBlock Text="Tài khoản Google trong Profile" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource ThemeTextPrimary}" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TxtAccountsModalTitle" Text="Tài khoản Google trong Profile" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource ThemeTextPrimary}" VerticalAlignment="Center"/>
                                 <Border x:Name="BorderAccountsModalCount" Background="{DynamicResource ThemeCardSubBg}" BorderBrush="{DynamicResource ThemeCardSubBorder}" BorderThickness="1" CornerRadius="5" Padding="6,1.5" Margin="8,0,0,0" VerticalAlignment="Center">
                                     <TextBlock x:Name="TxtAccountsModalCount" Text="1" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource ThemeNavActiveFg}"/>
                                 </Border>
@@ -2549,7 +2549,7 @@
                             <TextBlock x:Name="TxtAccountsModalProfileName" Text="Profile: Cá nhân 1 (Default)" FontSize="11.5" Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,3,0,0"/>
                         </StackPanel>
 
-                        <Button Grid.Column="1" Content="✕" Foreground="{DynamicResource ThemeTextSecondary}" Background="Transparent" BorderThickness="0" 
+                        <Button x:Name="BtnCloseAccountsModalTop" Grid.Column="1" Content="✕" Foreground="{DynamicResource ThemeTextSecondary}" Background="Transparent" BorderThickness="0" 
                                 Cursor="Hand" Click="BtnCloseAccountsModal_Click" FontSize="13" Padding="6,2" ToolTip="Đóng"/>
                     </Grid>
 
@@ -2570,11 +2570,11 @@
                                                FontWeight="SemiBold" Foreground="{DynamicResource ThemeNavActiveFg}" 
                                                VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
-                                <Button Grid.Column="1" Style="{StaticResource DangerBtn}" Padding="10,4" Margin="8,0,0,0"
+                                <Button x:Name="BtnCancelSyncBanner" Grid.Column="1" Style="{StaticResource DangerBtn}" Padding="10,4" Margin="8,0,0,0"
                                         Click="BtnCancelSyncInModal_Click" ToolTip="Dừng ngay lập tức toàn bộ quá trình đồng bộ hàng loạt">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="⏹ " FontSize="10.5" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Dừng đồng bộ" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="TxtCancelSyncBannerText" Text="Dừng đồng bộ" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
                             </Grid>
@@ -2582,75 +2582,75 @@
 
                         <!-- Accounts Scroll List -->
                         <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
-                        <ItemsControl x:Name="AccountsItemsControl">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Background="{DynamicResource ThemeCardSubBg}" BorderBrush="{DynamicResource ThemeCardSubBorder}" BorderThickness="1" CornerRadius="8" 
-                                            Padding="10,8" Margin="0,0,0,6">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
+                            <ItemsControl x:Name="AccountsItemsControl">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{DynamicResource ThemeCardSubBg}" BorderBrush="{DynamicResource ThemeCardSubBorder}" BorderThickness="1" CornerRadius="8" 
+                                                Padding="10,8" Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
 
-                                            <!-- Monogram Avatar -->
-                                            <Border Grid.Column="0" Width="34" Height="34" CornerRadius="17" 
-                                                    Background="{Binding InitialBrush}" Margin="0,0,10,0" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding InitialLetter}" Foreground="#FFFFFF" FontWeight="Bold" 
-                                                           FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
+                                                <!-- Monogram Avatar -->
+                                                <Border Grid.Column="0" Width="34" Height="34" CornerRadius="17" 
+                                                        Background="{Binding InitialBrush}" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding InitialLetter}" Foreground="#FFFFFF" FontWeight="Bold" 
+                                                               FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
 
-                                            <!-- Details -->
-                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding DisplayNameMasked}" FontWeight="SemiBold" FontSize="12.5" Foreground="{DynamicResource ThemeTextPrimary}"
-                                                               Cursor="Hand" MouseDown="TxtGoogleAccountName_MouseDown" ToolTip="Nhấp chuột để ẩn/hiện tên tài khoản này"/>
-                                                    <!-- Primary Badge -->
-                                                    <Border Margin="8,0,0,0" Background="{DynamicResource ThemeStatusRunningBg}" BorderBrush="{DynamicResource ThemeStatusRunningBorder}" BorderThickness="1" 
-                                                            CornerRadius="4" Padding="5,1" VerticalAlignment="Center">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsPrimary}" Value="True">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                        <TextBlock Text="★ Tài khoản chính" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource ThemeStatusRunningFg}"/>
-                                                    </Border>
-                                                </StackPanel>
-                                                <TextBlock Text="{Binding EmailMasked}" FontSize="11" Foreground="{DynamicResource ThemeEmailFg}" Margin="0,1,0,0"
-                                                           Cursor="Hand" MouseDown="TxtGoogleAccountEmail_MouseDown" ToolTip="Nhấp chuột trái: Ẩn/hiện email • Chuột phải: Sao chép" MouseRightButtonUp="TxtGoogleAccountEmail_MouseRightButtonUp"/>
-                                            </StackPanel>
-
-                                            <!-- Action Buttons: Sync to Antigravity + Copy Email -->
-                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <!-- Sync to Antigravity Button -->
-                                                <Button Style="{StaticResource PrimaryGreenBtn}" Padding="9,4" Margin="0,0,6,0"
-                                                        Tag="{Binding}" Click="BtnSyncAccountToAntigravity_Click"
-                                                        ToolTip="{Binding SyncButtonTooltip}">
-                                                    <TextBlock Text="{Binding SyncButtonText}" FontSize="10.5" FontWeight="SemiBold"/>
-                                                </Button>
-
-                                                <!-- Copy Button -->
-                                                <Button Style="{StaticResource SecondaryBtn}" Padding="8,4" 
-                                                        Tag="{Binding Email}" Click="BtnCopyAccountEmail_Click" ToolTip="Sao chép địa chỉ email này" 
-                                                        VerticalAlignment="Center">
+                                                <!-- Details -->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="📋 " FontSize="10"/>
-                                                        <TextBlock Text="Sao chép" FontSize="10.5"/>
+                                                        <TextBlock Text="{Binding DisplayNameMasked}" FontWeight="SemiBold" FontSize="12.5" Foreground="{DynamicResource ThemeTextPrimary}"
+                                                                   Cursor="Hand" MouseDown="TxtGoogleAccountName_MouseDown" ToolTip="{Binding AccountNameTooltip}"/>
+                                                        <!-- Primary Badge -->
+                                                        <Border Margin="8,0,0,0" Background="{DynamicResource ThemeStatusRunningBg}" BorderBrush="{DynamicResource ThemeStatusRunningBorder}" BorderThickness="1" 
+                                                                CornerRadius="4" Padding="5,1" VerticalAlignment="Center">
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsPrimary}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                            <TextBlock Text="{Binding PrimaryBadgeText}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource ThemeStatusRunningFg}"/>
+                                                        </Border>
                                                     </StackPanel>
-                                                </Button>
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
+                                                    <TextBlock Text="{Binding EmailMasked}" FontSize="11" Foreground="{DynamicResource ThemeEmailFg}" Margin="0,1,0,0"
+                                                               Cursor="Hand" MouseDown="TxtGoogleAccountEmail_MouseDown" ToolTip="{Binding AccountEmailTooltip}" MouseRightButtonUp="TxtGoogleAccountEmail_MouseRightButtonUp"/>
+                                                </StackPanel>
+
+                                                <!-- Action Buttons: Sync to Antigravity + Copy Email -->
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <!-- Sync to Antigravity Button -->
+                                                    <Button Style="{StaticResource PrimaryGreenBtn}" Padding="9,4" Margin="0,0,6,0"
+                                                            Tag="{Binding}" Click="BtnSyncAccountToAntigravity_Click"
+                                                            ToolTip="{Binding SyncButtonTooltip}">
+                                                        <TextBlock Text="{Binding SyncButtonText}" FontSize="10.5" FontWeight="SemiBold"/>
+                                                    </Button>
+
+                                                    <!-- Copy Button -->
+                                                    <Button Style="{StaticResource SecondaryBtn}" Padding="8,4" 
+                                                            Tag="{Binding Email}" Click="BtnCopyAccountEmail_Click" ToolTip="{Binding CopyButtonTooltip}" 
+                                                            VerticalAlignment="Center">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="📋 " FontSize="10"/>
+                                                            <TextBlock Text="{Binding CopyButtonText}" FontSize="10.5"/>
+                                                        </StackPanel>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </StackPanel>
 
                     <!-- Footer Action -->
@@ -2664,10 +2664,10 @@
                                 ToolTip="Dừng ngay lập tức toàn bộ quá trình đồng bộ đang chạy">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="⏹ " FontSize="11" VerticalAlignment="Center"/>
-                                <TextBlock Text="Dừng đồng bộ" FontSize="11.5" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TxtCancelSyncInModalText" Text="Dừng đồng bộ" FontSize="11.5" FontWeight="Bold" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Style="{StaticResource SecondaryBtn}" Content="Đóng" Padding="18,6" Click="BtnCloseAccountsModal_Click"/>
+                        <Button x:Name="BtnCloseAccountsModalBottom" Style="{StaticResource SecondaryBtn}" Content="Đóng" Padding="18,6" Click="BtnCloseAccountsModal_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -2720,12 +2720,12 @@
 
                         <!-- Header Text -->
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="Tùy Chỉnh Chu Kỳ Đo Quota" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource ThemeTextPrimary}"/>
-                            <TextBlock Text="Cài đặt tần suất tự động kiểm tra hạn mức AI" FontSize="11.5" Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,3,0,0"/>
+                            <TextBlock x:Name="TxtCustomIntervalTitle" Text="Tùy Chỉnh Chu Kỳ Đo Quota" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource ThemeTextPrimary}"/>
+                            <TextBlock x:Name="TxtCustomIntervalSub" Text="Cài đặt tần suất tự động kiểm tra hạn mức AI" FontSize="11.5" Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,3,0,0"/>
                         </StackPanel>
 
                         <!-- Close Button -->
-                        <Button Grid.Column="2" Style="{StaticResource ModernModalCloseBtn}" Content="✕" 
+                        <Button x:Name="BtnCustomIntervalClose" Grid.Column="2" Style="{StaticResource ModernModalCloseBtn}" Content="✕" 
                                 ToolTip="Đóng (Hủy bỏ)" Click="BtnCustomIntervalCancel_Click" VerticalAlignment="Top"/>
                     </Grid>
 
@@ -2738,14 +2738,14 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="💡" FontSize="12.5" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="Nhập khoảng thời gian bạn muốn hệ thống tự động kiểm tra Quota (tối thiểu 5 giây, tối đa 7 ngày)." 
+                            <TextBlock x:Name="TxtCustomIntervalHint" Grid.Column="1" Text="Nhập khoảng thời gian bạn muốn hệ thống tự động kiểm tra Quota (tối thiểu 5 giây, tối đa 7 ngày)." 
                                        FontSize="11.5" Foreground="{DynamicResource ThemeTextSecondary}" TextWrapping="Wrap" VerticalAlignment="Center"/>
                         </Grid>
                     </Border>
 
                     <!-- Row 2: Inputs (Label + Number Input + Unit ComboBox) -->
                     <StackPanel Grid.Row="2" Margin="0,0,0,16">
-                        <TextBlock Text="Khoảng thời gian chu kỳ:" FontSize="12" FontWeight="SemiBold" 
+                        <TextBlock x:Name="TxtCustomIntervalInputLabel" Text="Khoảng thời gian chu kỳ:" FontSize="12" FontWeight="SemiBold" 
                                    Foreground="{DynamicResource ThemeTextPrimary}" Margin="0,0,0,8"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -2781,16 +2781,16 @@
                             <!-- Modern Styled Unit ComboBox -->
                             <ComboBox x:Name="CmbCustomIntervalUnit" Grid.Column="1" Style="{StaticResource ModernModalComboBox}" 
                                       ItemContainerStyle="{StaticResource ModernModalComboBoxItem}" Height="40" SelectedIndex="1">
-                                <ComboBoxItem Content="Giây (s)"/>
-                                <ComboBoxItem Content="Phút (m)"/>
-                                <ComboBoxItem Content="Giờ (h)"/>
+                                <ComboBoxItem x:Name="CmbItemSeconds" Content="Giây (s)"/>
+                                <ComboBoxItem x:Name="CmbItemMinutes" Content="Phút (m)"/>
+                                <ComboBoxItem x:Name="CmbItemHours" Content="Giờ (h)"/>
                             </ComboBox>
                         </Grid>
                     </StackPanel>
 
                     <!-- Row 3: Quick Presets Section -->
                     <StackPanel Grid.Row="3" Margin="0,0,0,20">
-                        <TextBlock Text="⚡ Chọn nhanh chu kỳ gợi ý:" FontSize="11.5" FontWeight="SemiBold" 
+                        <TextBlock x:Name="TxtCustomIntervalPresetsLabel" Text="⚡ Chọn nhanh chu kỳ gợi ý:" FontSize="11.5" FontWeight="SemiBold" 
                                    Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,0,0,8"/>
                         <WrapPanel Orientation="Horizontal">
                             <Button Content="15s" Tag="15s" Style="{StaticResource PresetChipBtn}" Click="BtnPresetInterval_Click"/>
@@ -2809,13 +2809,13 @@
                     <!-- Row 4: Divider & Action Buttons -->
                     <Border Grid.Row="4" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ThemeCardSubBorder}" Padding="0,14,0,0">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button Style="{StaticResource SecondaryBtn}" Content="Hủy bỏ" Height="36" Padding="18,0" 
+                            <Button x:Name="BtnCustomIntervalCancel" Style="{StaticResource SecondaryBtn}" Content="Hủy bỏ" Height="36" Padding="18,0" 
                                     Margin="0,0,10,0" Click="BtnCustomIntervalCancel_Click"/>
                             <Button Style="{StaticResource PrimaryGreenBtn}" Height="36" Padding="20,0" 
                                     Click="BtnCustomIntervalApply_Click">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="✓" FontWeight="Bold" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Áp dụng &amp; Bật" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="TxtCustomIntervalApplyText" Text="Áp dụng &amp; Bật" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -2891,7 +2891,7 @@
                             <Border Background="{DynamicResource ThemeCardSubBg}" BorderBrush="{DynamicResource ThemeCardSubBorder}" 
                                     BorderThickness="1" CornerRadius="10" Padding="12,10" Margin="0,0,0,10">
                                 <StackPanel>
-                                    <TextBlock Text="DANH SÁCH TÀI KHOẢN CHỜ ĐỒNG BỘ" FontSize="9.5" FontWeight="Bold" 
+                                    <TextBlock x:Name="TxtBatchSyncHeaderTitle" Text="DANH SÁCH TÀI KHOẢN CHỜ ĐỒNG BỘ" FontSize="9.5" FontWeight="Bold" 
                                                Foreground="{DynamicResource ThemeTextMuted}" Margin="0,0,0,8"/>
                                     
                                     <StackPanel x:Name="PanelBatchSyncAccountItems"/>
@@ -2911,7 +2911,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="💡" FontSize="13" Margin="0,0,8,0" VerticalAlignment="Top"/>
-                                    <TextBlock Grid.Column="1" Text="Trình duyệt Chrome sẽ lần lượt mở từng tài khoản để bạn xác nhận. Hệ thống sẽ tự đóng tab và lưu token vào Antigravity ngay khi hoàn tất." 
+                                    <TextBlock x:Name="TxtBatchSyncGuidance" Grid.Column="1" Text="Trình duyệt Chrome sẽ lần lượt mở từng tài khoản để bạn xác nhận. Hệ thống sẽ tự đóng tab và lưu token vào Antigravity ngay khi hoàn tất." 
                                                FontSize="11" Foreground="{DynamicResource ThemeTextSecondary}" TextWrapping="Wrap" LineHeight="16"/>
                                 </Grid>
                             </Border>
@@ -2925,8 +2925,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="⚡ Tự động bấm nút Đăng nhập (Auto-Click)" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextPrimary}"/>
-                                        <TextBlock Text="Chỉ click khi phát hiện đúng nút Đăng nhập trên màn hình" FontSize="9.5" Foreground="{DynamicResource ThemeTextMuted}" Margin="0,1,0,0"/>
+                                        <TextBlock x:Name="TxtAutoClickInModalTitle" Text="⚡ Tự động bấm nút Đăng nhập (Auto-Click)" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextPrimary}"/>
+                                        <TextBlock x:Name="TxtAutoClickInModalSub" Text="Chỉ click khi phát hiện đúng nút Đăng nhập trên màn hình" FontSize="9.5" Foreground="{DynamicResource ThemeTextMuted}" Margin="0,1,0,0"/>
                                     </StackPanel>
                                     <CheckBox x:Name="ChkAutoClickInModal" Grid.Column="1" VerticalAlignment="Center" 
                                               Cursor="Hand" Click="ChkAutoClickInModal_Click"/>

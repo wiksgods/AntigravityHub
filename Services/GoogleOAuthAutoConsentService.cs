@@ -551,7 +551,7 @@ namespace ProfileSwitchChrome.Services
                         string windowTitle = GetWindowTitle(oauthHwnd);
                         if (IsCallbackSuccess(windowTitle))
                         {
-                            Notify("Đăng nhập Google thành công! Đang lưu thông tin...");
+                            Notify(LocalizationManager.IsEnglish ? "Google sign-in successful! Saving account..." : "Đăng nhập Google thành công! Đang lưu thông tin...");
                             await Task.Delay(500, localCts.Token);
                             break;
                         }
@@ -572,34 +572,34 @@ namespace ProfileSwitchChrome.Services
                                 if (TryFindAndClickSignInButton(oauthHwnd, out string btnName))
                                 {
                                     hasAttemptedAutoClick = true;
-                                    Notify($"✓ Đã phát hiện nút '{btnName}' và tự động bấm!");
+                                    Notify(LocalizationManager.IsEnglish ? $"✓ Detected button '{btnName}' and clicked automatically!" : $"✓ Đã phát hiện nút '{btnName}' và tự động bấm!");
                                 }
                                 else
                                 {
                                     autoClickScanCount++;
                                     if (autoClickScanCount % 3 == 0 && elapsedSec < 12.0)
                                     {
-                                        Notify("Đang tìm nút Đăng nhập trên trình duyệt...");
+                                        Notify(LocalizationManager.IsEnglish ? "Searching for Sign in button on browser..." : "Đang tìm nút Đăng nhập trên trình duyệt...");
                                     }
                                     else if (elapsedSec >= 12.0 && !reportedNotFound)
                                     {
                                         hasAttemptedAutoClick = true; // Dừng quét
                                         reportedNotFound = true;
-                                        Notify("⚠️ Không tìm thấy nút Đăng nhập! Vui lòng bấm thủ công.");
+                                        Notify(LocalizationManager.IsEnglish ? "⚠️ Sign in button not found! Please click manually." : "⚠️ Không tìm thấy nút Đăng nhập! Vui lòng bấm thủ công.");
                                     }
                                 }
                             }
                             else
                             {
-                                Notify("Đang tải trang đăng nhập Google...");
+                                Notify(LocalizationManager.IsEnglish ? "Loading Google sign-in page..." : "Đang tải trang đăng nhập Google...");
                             }
                         }
                         else if (!AutoClickSignInEnabled && !hasAttemptedAutoClick)
                         {
                             hasAttemptedAutoClick = true; // Chỉ thông báo 1 lần
                             Notify(!string.IsNullOrWhiteSpace(loginHint)
-                                ? $"Xác nhận đăng nhập trên trình duyệt cho '{loginHint}'"
-                                : "Xác nhận đăng nhập trên trình duyệt...");
+                                ? (LocalizationManager.IsEnglish ? $"Please confirm login in browser for '{loginHint}'" : $"Xác nhận đăng nhập trên trình duyệt cho '{loginHint}'")
+                                : (LocalizationManager.IsEnglish ? "Please confirm login in browser..." : "Xác nhận đăng nhập trên trình duyệt..."));
                         }
                     }
                     catch (OperationCanceledException)

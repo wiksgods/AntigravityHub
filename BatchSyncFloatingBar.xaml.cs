@@ -29,6 +29,7 @@ namespace ProfileSwitchChrome
 
             this.Loaded += (s, e) =>
             {
+                ApplyLocalization();
                 ChkAutoClickFloating.IsChecked = GoogleOAuthAutoConsentService.AutoClickSignInEnabled;
                 CenterOnScreenInitial();
                 _followTimer.Start();
@@ -209,6 +210,29 @@ namespace ProfileSwitchChrome
             bool enabled = ChkAutoClickFloating.IsChecked == true;
             GoogleOAuthAutoConsentService.AutoClickSignInEnabled = enabled;
             AutoClickToggled?.Invoke(enabled);
+        }
+
+        private void ApplyLocalization()
+        {
+            bool isEn = LocalizationManager.IsEnglish;
+            this.Title = isEn ? "Sync Control - Antigravity" : "Điều Khiển Đồng Bộ - Antigravity";
+            if (TxtFloatingTitle != null) TxtFloatingTitle.Text = isEn ? "GOOGLE SYNC" : "ĐỒNG BỘ GOOGLE";
+            if (TxtFloatingSubtitle != null) TxtFloatingSubtitle.Text = isEn ? "Process Control" : "Điều khiển tiến trình";
+            if (BorderDragGrip != null) BorderDragGrip.ToolTip = isEn ? "Click and hold to drag" : "Nhấp giữ chuột để kéo di chuyển";
+            if (TxtAutoClickFloatingTitle != null) TxtAutoClickFloatingTitle.Text = isEn ? "Auto-Click Sign in" : "Tự động bấm Đăng nhập";
+            if (TxtAutoClickFloatingSub != null) TxtAutoClickFloatingSub.Text = isEn ? "Only clicks when button detected" : "Chỉ click khi phát hiện thấy nút";
+            if (ChkAutoClickFloating != null) ChkAutoClickFloating.ToolTip = isEn ? "Auto-click Sign in / Continue button when detected on Google page (disabled by default)" : "Tự động bấm nút Đăng nhập / Sign in khi phát hiện thấy trên trang Google (mặc định tắt)";
+            if (BtnSkip != null)
+            {
+                BtnSkip.Content = isEn ? "Skip" : "Bỏ qua";
+                BtnSkip.ToolTip = isEn ? "Skip this account (or click ✕ on Chrome)" : "Bỏ qua tài khoản này (hoặc bấm ✕ trên Chrome)";
+            }
+            if (BtnStop != null)
+            {
+                BtnStop.Content = isEn ? "Stop Sync" : "Dừng đồng bộ";
+                BtnStop.ToolTip = isEn ? "Completely stop batch sync process" : "Dừng hoàn toàn toàn bộ tiến trình đồng bộ hàng loạt";
+            }
+            if (TxtHint != null) TxtHint.Text = isEn ? "Click ✕ on Chrome to skip • Stops only on Stop click" : "Bấm ✕ trên Chrome để bỏ qua • Chỉ dừng khi ấn Dừng";
         }
     }
 }

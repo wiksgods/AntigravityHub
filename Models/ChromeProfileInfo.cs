@@ -63,10 +63,34 @@ namespace ProfileSwitchChrome.Models
             IsEmailHidden = target;
         }
 
-        public string SyncButtonText => IsAlreadyInAntigravity ? "🔄 Cập nhật token" : "⚡ Sync Antigravity";
-        public string SyncButtonTooltip => IsAlreadyInAntigravity
-            ? "Tài khoản này đã có trong Antigravity. Bấm để làm mới/cấp lại token bằng Chrome Profile này (không cần gõ pass/2FA)."
-            : "Tự động mở Chrome Profile này để đăng nhập vào Antigravity (Google tự nhận diện, không cần gõ pass/2FA).";
+        public string SyncButtonText => ProfileSwitchChrome.Services.LocalizationManager.IsEnglish 
+            ? (IsAlreadyInAntigravity ? "🔄 Refresh Token" : "⚡ Sync Antigravity")
+            : (IsAlreadyInAntigravity ? "🔄 Cập nhật token" : "⚡ Sync Antigravity");
+
+        public string SyncButtonTooltip => ProfileSwitchChrome.Services.LocalizationManager.IsEnglish
+            ? (IsAlreadyInAntigravity
+                ? "This account is already in Antigravity. Click to refresh/reissue token using this Chrome Profile (no pass/2FA required)."
+                : "Automatically open this Chrome Profile to sign in to Antigravity (Google auto-detects session, no pass/2FA required).")
+            : (IsAlreadyInAntigravity
+                ? "Tài khoản này đã có trong Antigravity. Bấm để làm mới/cấp lại token bằng Chrome Profile này (không cần gõ pass/2FA)."
+                : "Tự động mở Chrome Profile này để đăng nhập vào Antigravity (Google tự nhận diện, không cần gõ pass/2FA).");
+
+        public string PrimaryBadgeText => ProfileSwitchChrome.Services.LocalizationManager.IsEnglish ? "★ Primary Account" : "★ Tài khoản chính";
+        public string CopyButtonText => ProfileSwitchChrome.Services.LocalizationManager.IsEnglish ? "Copy" : "Sao chép";
+        public string CopyButtonTooltip => ProfileSwitchChrome.Services.LocalizationManager.IsEnglish ? "Copy this email address" : "Sao chép địa chỉ email này";
+        public string AccountNameTooltip => ProfileSwitchChrome.Services.LocalizationManager.IsEnglish ? "Click to toggle masking name" : "Nhấp chuột để ẩn/hiện tên tài khoản này";
+        public string AccountEmailTooltip => ProfileSwitchChrome.Services.LocalizationManager.IsEnglish ? "Left-click: Mask/unmask email • Right-click: Copy" : "Nhấp chuột trái: Ẩn/hiện email • Chuột phải: Sao chép";
+
+        public void NotifyLanguageChanged()
+        {
+            OnPropertyChanged(nameof(SyncButtonText));
+            OnPropertyChanged(nameof(SyncButtonTooltip));
+            OnPropertyChanged(nameof(PrimaryBadgeText));
+            OnPropertyChanged(nameof(CopyButtonText));
+            OnPropertyChanged(nameof(CopyButtonTooltip));
+            OnPropertyChanged(nameof(AccountNameTooltip));
+            OnPropertyChanged(nameof(AccountEmailTooltip));
+        }
 
         public string InitialLetter
         {
@@ -268,6 +292,13 @@ namespace ProfileSwitchChrome.Models
             OnPropertyChanged(nameof(AccountsTooltipText));
             OnPropertyChanged(nameof(NameMasked));
             OnPropertyChanged(nameof(UserNameMasked));
+            if (GoogleAccounts != null)
+            {
+                foreach (var acc in GoogleAccounts)
+                {
+                    acc.NotifyLanguageChanged();
+                }
+            }
         }
 
         public static string FormatBytes(long bytes)

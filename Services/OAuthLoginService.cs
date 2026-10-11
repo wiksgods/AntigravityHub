@@ -152,12 +152,12 @@ namespace ProfileSwitchChrome.Services
 
             if (!started)
             {
-                StatusChanged?.Invoke($"Không thể mở cổng {_port}. Cổng 8888 đang bị chiếm dụng.");
+                StatusChanged?.Invoke(LocalizationManager.IsEnglish ? $"Cannot open port {_port}. Port 8888 is already in use." : $"Không thể mở cổng {_port}. Cổng 8888 đang bị chiếm dụng.");
                 CleanupListener();
                 return null;
             }
 
-            StatusChanged?.Invoke("Đang mở trình duyệt đăng nhập...");
+            StatusChanged?.Invoke(LocalizationManager.IsEnglish ? "Opening browser for sign-in..." : "Đang mở trình duyệt đăng nhập...");
 
             string redirectUri = RedirectUri;
             string state = Guid.NewGuid().ToString("N");
@@ -253,13 +253,13 @@ namespace ProfileSwitchChrome.Services
             }
             catch (Exception ex)
             {
-                StatusChanged?.Invoke($"Không thể mở trình duyệt: {ex.Message}");
+                StatusChanged?.Invoke(LocalizationManager.IsEnglish ? $"Cannot open browser: {ex.Message}" : $"Không thể mở trình duyệt: {ex.Message}");
                 CleanupListener();
                 GoogleOAuthAutoConsentService.StopWatching();
                 return null;
             }
 
-            StatusChanged?.Invoke("Vui lòng bấm xác nhận trên trình duyệt...");
+            StatusChanged?.Invoke(LocalizationManager.IsEnglish ? "Please confirm sign-in in your browser..." : "Vui lòng bấm xác nhận trên trình duyệt...");
 
             OAuthResult? result = null;
             try
@@ -268,7 +268,7 @@ namespace ProfileSwitchChrome.Services
             }
             catch (OperationCanceledException)
             {
-                StatusChanged?.Invoke("Đăng nhập bị hủy hoặc hết thời gian.");
+                StatusChanged?.Invoke(LocalizationManager.IsEnglish ? "Sign-in cancelled or timed out." : "Đăng nhập bị hủy hoặc hết thời gian.");
                 return null;
             }
             finally
@@ -285,16 +285,16 @@ namespace ProfileSwitchChrome.Services
 
             if (result == null)
             {
-                StatusChanged?.Invoke("Không nhận được token từ Google.");
+                StatusChanged?.Invoke(LocalizationManager.IsEnglish ? "No token received from Google." : "Không nhận được token từ Google.");
                 return null;
             }
 
             // 4. Fetch user info (email, name, picture) using the access token
-            StatusChanged?.Invoke("Đang lấy thông tin tài khoản Google...");
+            StatusChanged?.Invoke(LocalizationManager.IsEnglish ? "Fetching Google account info..." : "Đang lấy thông tin tài khoản Google...");
             var userInfo = await FetchUserInfoAsync(result.AccessToken);
             if (userInfo == null)
             {
-                StatusChanged?.Invoke("Không lấy được thông tin tài khoản.");
+                StatusChanged?.Invoke(LocalizationManager.IsEnglish ? "Failed to retrieve account info." : "Không lấy được thông tin tài khoản.");
                 return null;
             }
 
@@ -324,7 +324,7 @@ namespace ProfileSwitchChrome.Services
 
             account.RawUserStatus = AntigravityProfileManager.BuildUserStatusProtobuf(userInfo.Email);
 
-            StatusChanged?.Invoke($"✓ Đăng nhập thành công: {userInfo.Email}");
+            StatusChanged?.Invoke(LocalizationManager.IsEnglish ? $"✓ Sign-in successful: {userInfo.Email}" : $"✓ Đăng nhập thành công: {userInfo.Email}");
             return account;
         }
 
@@ -393,14 +393,14 @@ namespace ProfileSwitchChrome.Services
                         // Đóng ngay lập tức trình duyệt không cần chờ đợi
                         GoogleOAuthAutoConsentService.CloseAllOAuthWindows();
                         await SendHtmlResponse(resp, BuildSuccessHtml());
-                        StatusChanged?.Invoke("✓ Đăng nhập thành công! Đang lưu thông tin...");
+                        StatusChanged?.Invoke(LocalizationManager.IsEnglish ? "✓ Sign-in successful! Saving account..." : "✓ Đăng nhập thành công! Đang lưu thông tin...");
 
                         var tokenResult = await ExchangeCodeAsync(code, redirectUri);
                         _resultTcs.TrySetResult(tokenResult);
                         return;
                     }
 
-                    await SendHtmlResponse(resp, BuildErrorHtml("Không nhận được token."));
+                    await SendHtmlResponse(resp, BuildErrorHtml(LocalizationManager.IsEnglish ? "No token received." : "Không nhận được token."));
                     _resultTcs.TrySetResult(null);
                 }
                 catch (Exception ex)
@@ -511,24 +511,24 @@ namespace ProfileSwitchChrome.Services
         private static string BuildSuccessHtml() => @"<!DOCTYPE html><html><head><meta charset='utf-8'><title></title><script>window.open('','_self','');window.close();</script></head><body style='background:#0d1117;margin:0;'></body></html>";
 
         private static string BuildErrorHtml(string error) => $@"<!DOCTYPE html><html><head><meta charset='utf-8'>
-<title>Lỗi đăng nhập</title>
+<title>{(LocalizationManager.IsEnglish ? "Sign-in Error" : "Lỗi đăng nhập")}</title>
 <style>body{{font-family:'Segoe UI',sans-serif;background:#0d1117;color:#e6edf3;display:flex;align-items:center;
 justify-content:center;height:100vh;margin:0}}.card{{background:#161b22;border:1px solid #f85149;
 border-radius:12px;padding:40px 48px;text-align:center;max-width:400px}}.icon{{font-size:48px;margin-bottom:16px}}
 h1{{color:#f85149;font-size:22px;margin:0 0 8px}}p{{color:#8b949e;margin:0}}</style></head>
-<body><div class='card'><div class='icon'>❌</div><h1>Đăng nhập thất bại</h1>
+<body><div class='card'><div class='icon'>❌</div><h1>{(LocalizationManager.IsEnglish ? "Sign-in Failed" : "Đăng nhập thất bại")}</h1>
 <p>{error}</p></div></body></html>";
 
-        private static string BuildLoadingHtml() => @"<!DOCTYPE html><html><head><meta charset='utf-8'>
-<title>Đang xử lý...</title>
-<style>body{font-family:'Segoe UI',sans-serif;background:#0d1117;color:#e6edf3;display:flex;align-items:center;
-justify-content:center;height:100vh;margin:0}.card{background:#161b22;border:1px solid #30363d;
-border-radius:12px;padding:40px 48px;text-align:center;max-width:400px}
-.spin{font-size:40px;animation:s 1s linear infinite;display:inline-block}
-@keyframes s{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-h1{color:#58a6ff;font-size:22px;margin:16px 0 8px}p{color:#8b949e;margin:0}</style></head>
-<body><div class='card'><div class='spin'>⚙️</div><h1>Đang xử lý...</h1>
-<p>Vui lòng đợi trong giây lát.</p></div></body></html>";
+        private static string BuildLoadingHtml() => $@"<!DOCTYPE html><html><head><meta charset='utf-8'>
+<title>{(LocalizationManager.IsEnglish ? "Processing..." : "Đang xử lý...")}</title>
+<style>body{{font-family:'Segoe UI',sans-serif;background:#0d1117;color:#e6edf3;display:flex;align-items:center;
+justify-content:center;height:100vh;margin:0}}.card{{background:#161b22;border:1px solid #30363d;
+border-radius:12px;padding:40px 48px;text-align:center;max-width:400px}}
+.spin{{font-size:40px;animation:s 1s linear infinite;display:inline-block}}
+@keyframes s{{from{{transform:rotate(0)}}to{{transform:rotate(360deg)}}}}
+h1{{color:#58a6ff;font-size:22px;margin:16px 0 8px}}p{{color:#8b949e;margin:0}}</style></head>
+<body><div class='card'><div class='spin'>⚙️</div><h1>{(LocalizationManager.IsEnglish ? "Processing..." : "Đang xử lý...")}</h1>
+<p>{(LocalizationManager.IsEnglish ? "Please wait a moment." : "Vui lòng đợi trong giây lát.")}</p></div></body></html>";
 
         /// <summary>
         /// Uses refresh_token to acquire a fresh access_token from Google OAuth.

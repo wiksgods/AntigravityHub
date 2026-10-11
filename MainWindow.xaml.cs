@@ -492,11 +492,11 @@ namespace ProfileSwitchChrome
 
                 ReloadProfiles();
 
-                ShowToast($"✓ Đã đặt '{profile.Name}' làm mặc định thành công!");
+                ShowToast(LocalizationManager.IsEnglish ? $"✓ Set '{profile.Name}' as default successfully!" : $"✓ Đã đặt '{profile.Name}' làm mặc định thành công!");
             }
             else
             {
-                ShowAlertModal("Lỗi thiết lập", "Có lỗi xảy ra: " + msg, isError: true);
+                ShowAlertModal(LocalizationManager.IsEnglish ? "Configuration Error" : "Lỗi thiết lập", LocalizationManager.IsEnglish ? "An error occurred: " + msg : "Có lỗi xảy ra: " + msg, isError: true);
             }
         }
 
@@ -505,7 +505,7 @@ namespace ProfileSwitchChrome
             if (_currentDefault != null)
             {
                 ChromeProfileManager.LaunchChrome(_currentDefault.Id);
-                ShowToast($"Đang mở Chrome với profile '{_currentDefault.Name}'...");
+                ShowToast(LocalizationManager.IsEnglish ? $"Opening Chrome with profile '{_currentDefault.Name}'..." : $"Đang mở Chrome với profile '{_currentDefault.Name}'...");
             }
         }
 
@@ -515,7 +515,7 @@ namespace ProfileSwitchChrome
                 return;
 
             ChromeProfileManager.LaunchChrome(profile.Id);
-            ShowToast($"Đang mở Chrome với profile '{profile.Name}'...");
+            ShowToast(LocalizationManager.IsEnglish ? $"Opening Chrome with profile '{profile.Name}'..." : $"Đang mở Chrome với profile '{profile.Name}'...");
         }
 
         private void BtnCreateShortcut_Click(object sender, RoutedEventArgs e)
@@ -526,23 +526,25 @@ namespace ProfileSwitchChrome
             bool ok = ChromeProfileManager.CreateDedicatedShortcut(profile.Id, profile.Name);
             if (ok)
             {
-                ShowToast($"✓ Đã tạo phím tắt 'Chrome - {profile.Name}' ra màn hình Desktop!");
+                ShowToast(LocalizationManager.IsEnglish ? $"✓ Created Desktop shortcut 'Chrome - {profile.Name}'!" : $"✓ Đã tạo phím tắt 'Chrome - {profile.Name}' ra màn hình Desktop!");
             }
             else
             {
-                ShowAlertModal("Lỗi tạo phím tắt", "Không thể tạo phím tắt ra Desktop. Vui lòng kiểm tra quyền Administrator.", isError: true);
+                ShowAlertModal(LocalizationManager.IsEnglish ? "Shortcut Creation Error" : "Lỗi tạo phím tắt", LocalizationManager.IsEnglish ? "Cannot create Desktop shortcut. Please check Administrator privileges." : "Không thể tạo phím tắt ra Desktop. Vui lòng kiểm tra quyền Administrator.", isError: true);
             }
         }
 
         private void BtnCloseChrome_Click(object sender, RoutedEventArgs e)
         {
             int count = ChromeProfileManager.GetChromeProcessCount();
-            string msg = $"Đang có {count} tiến trình Chrome đang hoạt động trên máy.\n\nBạn có muốn đóng tất cả Chrome ngay để cấu hình Profile mặc định và phím tắt được áp dụng triệt để không?";
+            string msg = LocalizationManager.IsEnglish
+                ? $"There are {count} Chrome processes currently running.\n\nDo you want to close all Chrome instances to thoroughly apply the default profile and shortcut settings?"
+                : $"Đang có {count} tiến trình Chrome đang hoạt động trên máy.\n\nBạn có muốn đóng tất cả Chrome ngay để cấu hình Profile mặc định và phím tắt được áp dụng triệt để không?";
 
             ShowConfirmModal(
-                title: "Xác nhận đóng Chrome",
+                title: LocalizationManager.IsEnglish ? "Confirm Close Chrome" : "Xác nhận đóng Chrome",
                 message: msg,
-                confirmText: "🛑 Đóng tất cả Chrome",
+                confirmText: LocalizationManager.IsEnglish ? "🛑 Close All Chrome" : "🛑 Đóng tất cả Chrome",
                 isDanger: true,
                 onConfirm: () =>
                 {
@@ -550,7 +552,7 @@ namespace ProfileSwitchChrome
                     System.Threading.Thread.Sleep(500);
                     UpdateChromeRunningStatus();
                     ReloadProfiles();
-                    ShowToast("✓ Đã đóng tất cả tiến trình Chrome thành công.");
+                    ShowToast(LocalizationManager.IsEnglish ? "✓ Successfully closed all Chrome processes." : "✓ Đã đóng tất cả tiến trình Chrome thành công.");
                 });
         }
 
@@ -558,7 +560,7 @@ namespace ProfileSwitchChrome
         {
             ReloadProfiles();
             UpdateChromeRunningStatus();
-            ShowToast("✓ Đã làm mới danh sách Profile.");
+            ShowToast(LocalizationManager.IsEnglish ? "✓ Profile list refreshed." : "✓ Đã làm mới danh sách Profile.");
         }
 
         private void ShowToast(string message)
@@ -641,8 +643,8 @@ namespace ProfileSwitchChrome
             _floatingBar?.SetAutoClickState(_config.AutoClickSignIn);
             UpdateSilentSyncUI();
             ShowToast(_config.AutoClickSignIn 
-                ? "⚡ Đã BẬT Tự động bấm Đăng nhập (Auto-Click Sign in)" 
-                : "ℹ️ Đã TẮT Tự động bấm (Xác nhận thủ công)");
+                ? (LocalizationManager.IsEnglish ? "⚡ Enabled Auto-Click Sign in" : "⚡ Đã BẬT Tự động bấm Đăng nhập (Auto-Click Sign in)")
+                : (LocalizationManager.IsEnglish ? "ℹ️ Disabled Auto-Click (Manual confirmation)" : "ℹ️ Đã TẮT Tự động bấm (Xác nhận thủ công)"));
         }
 
         private void UpdateSilentSyncUI()
@@ -893,8 +895,8 @@ namespace ProfileSwitchChrome
             _floatingBar?.SetAutoClickState(isChecked);
             UpdateSilentSyncUI();
             ShowToast(isChecked 
-                ? "⚡ Đã BẬT Tự động bấm Đăng nhập (Auto-Click Sign in)" 
-                : "ℹ️ Đã TẮT Tự động bấm (Xác nhận thủ công)");
+                ? (LocalizationManager.IsEnglish ? "⚡ Enabled Auto-Click Sign in" : "⚡ Đã BẬT Tự động bấm Đăng nhập (Auto-Click Sign in)")
+                : (LocalizationManager.IsEnglish ? "ℹ️ Disabled Auto-Click (Manual confirmation)" : "ℹ️ Đã TẮT Tự động bấm (Xác nhận thủ công)"));
         }
 
         private void BtnModalConfirm_Click(object sender, RoutedEventArgs e)
@@ -1142,8 +1144,19 @@ namespace ProfileSwitchChrome
         private void OpenAccountsModal(ChromeProfileInfo profile)
         {
             _currentViewingAccountsProfile = profile;
+            TxtAccountsModalTitle.Text = LocalizationManager.IsEnglish ? "Google Accounts in Profile" : "Tài khoản Google trong Profile";
             TxtAccountsModalProfileName.Text = $"Profile: {profile.NameMasked} ({profile.Id})";
             TxtAccountsModalCount.Text = profile.GoogleAccountCount.ToString();
+            BtnCloseAccountsModalTop.ToolTip = LocalizationManager.IsEnglish ? "Close" : "Đóng";
+            BtnBatchSyncAllInModal.Content = LocalizationManager.IsEnglish ? "⚡ Sync All to Antigravity" : "⚡ Đồng bộ tất cả vào Antigravity";
+            BtnBatchSyncAllInModal.ToolTip = LocalizationManager.IsEnglish 
+                ? "Sync all Google accounts in this Profile to Antigravity (confirm in browser, tab closes automatically when done)"
+                : "Đồng bộ toàn bộ tài khoản Google trong Profile này vào Antigravity (bấm xác nhận trên trình duyệt, tab tự đóng khi hoàn tất)";
+            TxtCancelSyncInModalText.Text = LocalizationManager.IsEnglish ? "Stop Sync" : "Dừng đồng bộ";
+            BtnCancelSyncInModal.ToolTip = LocalizationManager.IsEnglish ? "Immediately stop the batch sync process" : "Dừng ngay lập tức toàn bộ quá trình đồng bộ đang chạy";
+            TxtCancelSyncBannerText.Text = LocalizationManager.IsEnglish ? "Stop Sync" : "Dừng đồng bộ";
+            BtnCancelSyncBanner.ToolTip = LocalizationManager.IsEnglish ? "Immediately stop the batch sync process" : "Dừng ngay lập tức toàn bộ quá trình đồng bộ hàng loạt";
+            BtnCloseAccountsModalBottom.Content = LocalizationManager.IsEnglish ? "Close" : "Đóng";
 
             // Refresh whether each account already exists in Antigravity
             var existingEmails = new HashSet<string>(
@@ -1156,6 +1169,7 @@ namespace ProfileSwitchChrome
                 acc.IsAlreadyInAntigravity = existingEmails.Contains(acc.Email);
                 acc.IsNameHidden = _config.HideChromeNames;
                 acc.IsEmailHidden = _config.HideChromeEmails;
+                acc.NotifyLanguageChanged();
             }
 
             AccountsItemsControl.ItemsSource = null;
@@ -1202,7 +1216,7 @@ namespace ProfileSwitchChrome
         {
             if (_isBatchSyncing)
             {
-                StopBatchSync("Đã dừng đồng bộ hàng loạt.");
+                StopBatchSync(LocalizationManager.IsEnglish ? "Batch sync stopped." : "Đã dừng đồng bộ hàng loạt.");
             }
             AccountsModalOverlay.Visibility = Visibility.Collapsed;
         }
@@ -1211,7 +1225,7 @@ namespace ProfileSwitchChrome
         {
             if (_isBatchSyncing)
             {
-                StopBatchSync("Đã dừng đồng bộ hàng loạt.");
+                StopBatchSync(LocalizationManager.IsEnglish ? "Batch sync stopped." : "Đã dừng đồng bộ hàng loạt.");
             }
             AccountsModalOverlay.Visibility = Visibility.Collapsed;
         }
@@ -1222,13 +1236,13 @@ namespace ProfileSwitchChrome
             {
                 if (string.IsNullOrWhiteSpace(acc.Email))
                 {
-                    ShowToast("Không tìm thấy địa chỉ email của tài khoản này.");
+                    ShowToast(LocalizationManager.IsEnglish ? "Email address not found for this account." : "Không tìm thấy địa chỉ email của tài khoản này.");
                     return;
                 }
 
                 if (_oauthService != null)
                 {
-                    ShowToast("Đang dừng phiên đồng bộ cũ để chuyển sang tài khoản mới...");
+                    ShowToast(LocalizationManager.IsEnglish ? "Stopping previous sync session to switch to new account..." : "Đang dừng phiên đồng bộ cũ để chuyển sang tài khoản mới...");
                     try
                     {
                         _oauthCts?.Cancel();
@@ -1344,20 +1358,20 @@ namespace ProfileSwitchChrome
 
         private void BtnCancelSyncInModal_Click(object sender, RoutedEventArgs e)
         {
-            StopBatchSync("Đã dừng đồng bộ.");
+            StopBatchSync(LocalizationManager.IsEnglish ? "Sync stopped." : "Đã dừng đồng bộ.");
         }
 
         private void BtnBatchSyncAllInModal_Click(object sender, RoutedEventArgs e)
         {
             if (_isBatchSyncing)
             {
-                ShowToast("Tiến trình đồng bộ hàng loạt đang chạy.");
+                ShowToast(LocalizationManager.IsEnglish ? "Batch sync process is already running." : "Tiến trình đồng bộ hàng loạt đang chạy.");
                 return;
             }
 
             if (_currentViewingAccountsProfile == null || _currentViewingAccountsProfile.GoogleAccounts.Count == 0)
             {
-                ShowToast("Không có tài khoản Google nào trong Profile này để đồng bộ.");
+                ShowToast(LocalizationManager.IsEnglish ? "No Google accounts in this profile to sync." : "Không có tài khoản Google nào trong Profile này để đồng bộ.");
                 return;
             }
 
@@ -1367,7 +1381,7 @@ namespace ProfileSwitchChrome
 
             if (accountsToSync.Count == 0)
             {
-                ShowToast("Không tìm thấy email hợp lệ trong danh sách tài khoản.");
+                ShowToast(LocalizationManager.IsEnglish ? "No valid email addresses found." : "Không tìm thấy email hợp lệ trong danh sách tài khoản.");
                 return;
             }
 
@@ -1398,7 +1412,7 @@ namespace ProfileSwitchChrome
             int successCount = 0;
             int failCount = 0;
 
-            ShowToast($"🌐 Bắt đầu đồng bộ {total} tài khoản. Vui lòng bấm xác nhận trên trình duyệt...");
+            ShowToast(LocalizationManager.IsEnglish ? $"🌐 Starting batch sync for {total} accounts. Please confirm in your browser..." : $"🌐 Bắt đầu đồng bộ {total} tài khoản. Vui lòng bấm xác nhận trên trình duyệt...");
 
             // Khởi tạo Floating UI bám cạnh popup Chrome để người dùng có thể Dừng hoặc Bỏ qua bất kỳ lúc nào
             try
@@ -1415,12 +1429,12 @@ namespace ProfileSwitchChrome
                 _config.Save();
                 UpdateSilentSyncUI();
                 ShowToast(enabled 
-                    ? "⚡ Đã BẬT Tự động bấm Đăng nhập (Auto-Click Sign in)" 
-                    : "ℹ️ Đã TẮT Tự động bấm (Xác nhận thủ công)");
+                    ? (LocalizationManager.IsEnglish ? "⚡ Enabled Auto-Click Sign in" : "⚡ Đã BẬT Tự động bấm Đăng nhập (Auto-Click Sign in)")
+                    : (LocalizationManager.IsEnglish ? "ℹ️ Disabled Auto-Click (Manual confirmation)" : "ℹ️ Đã TẮT Tự động bấm (Xác nhận thủ công)"));
             };
             _floatingBar.SkipRequested += () =>
             {
-                ShowToast("⏭ Đang bỏ qua tài khoản này theo yêu cầu...");
+                ShowToast(LocalizationManager.IsEnglish ? "⏭ Skipping this account as requested..." : "⏭ Đang bỏ qua tài khoản này theo yêu cầu...");
                 try
                 {
                     GoogleOAuthAutoConsentService.CloseAllOAuthWindows();
@@ -1431,7 +1445,7 @@ namespace ProfileSwitchChrome
             };
             _floatingBar.StopRequested += () =>
             {
-                StopBatchSync("Đã dừng đồng bộ hàng loạt.");
+                StopBatchSync(LocalizationManager.IsEnglish ? "Batch sync stopped." : "Đã dừng đồng bộ hàng loạt.");
             };
             _floatingBar.Show();
 
@@ -1447,7 +1461,7 @@ namespace ProfileSwitchChrome
 
                     if (TxtBatchSyncProgress != null)
                     {
-                        TxtBatchSyncProgress.Text = $"Đang đồng bộ ({i + 1}/{total}): {email}...";
+                        TxtBatchSyncProgress.Text = LocalizationManager.IsEnglish ? $"Syncing ({i + 1}/{total}): {email}..." : $"Đang đồng bộ ({i + 1}/{total}): {email}...";
                     }
 
                     _floatingBar?.UpdateProgress(i + 1, total, email);
@@ -1458,7 +1472,7 @@ namespace ProfileSwitchChrome
                     {
                         successCount++;
                         acc.IsAlreadyInAntigravity = true;
-                        ShowToast($"✓ Đã đồng bộ: {email}");
+                        ShowToast(LocalizationManager.IsEnglish ? $"✓ Synced: {email}" : $"✓ Đã đồng bộ: {email}");
                     }
                     else
                     {
@@ -1473,7 +1487,7 @@ namespace ProfileSwitchChrome
                         // Nếu người dùng bấm nút [X] trên cửa sổ Chrome, CHỈ BỎ QUA (skip) tài khoản này và tiếp tục mở tài khoản tiếp theo!
                         if (_lastSyncWasBrowserClosedManually)
                         {
-                            ShowToast($"⏭ Đã bỏ qua {email} (đã đóng Chrome). Đang mở tiếp tài khoản tiếp theo...");
+                            ShowToast(LocalizationManager.IsEnglish ? $"⏭ Skipped {email} (Chrome was closed). Opening next account..." : $"⏭ Đã bỏ qua {email} (đã đóng Chrome). Đang mở tiếp tài khoản tiếp theo...");
                         }
                     }
 
@@ -1485,24 +1499,26 @@ namespace ProfileSwitchChrome
 
                 if (!token.IsCancellationRequested && _isBatchSyncing)
                 {
-                    ShowToast($"✓ Hoàn tất đồng bộ hàng loạt: {successCount}/{total} tài khoản thành công!");
+                    ShowToast(LocalizationManager.IsEnglish ? $"✓ Batch sync finished: {successCount}/{total} accounts succeeded!" : $"✓ Hoàn tất đồng bộ hàng loạt: {successCount}/{total} tài khoản thành công!");
                     ShowAlertModal(
-                        "Đồng bộ hàng loạt hoàn tất",
-                        $"Đã đồng bộ thành công: {successCount}/{total} tài khoản vào Antigravity.\nThất bại/Bỏ qua: {failCount}.",
+                        LocalizationManager.IsEnglish ? "Batch Sync Finished" : "Đồng bộ hàng loạt hoàn tất",
+                        LocalizationManager.IsEnglish
+                            ? $"Successfully synced {successCount}/{total} accounts to Antigravity.\nFailed/Skipped: {failCount}."
+                            : $"Đã đồng bộ thành công: {successCount}/{total} tài khoản vào Antigravity.\nThất bại/Bỏ qua: {failCount}.",
                         isError: false);
                 }
                 else
                 {
-                    ShowToast($"Đã dừng đồng bộ hàng loạt ({successCount}/{total} tài khoản hoàn tất).");
+                    ShowToast(LocalizationManager.IsEnglish ? $"Batch sync stopped ({successCount}/{total} accounts completed)." : $"Đã dừng đồng bộ hàng loạt ({successCount}/{total} tài khoản hoàn tất).");
                 }
             }
             catch (OperationCanceledException)
             {
-                ShowToast("Đã dừng tiến trình đồng bộ hàng loạt.");
+                ShowToast(LocalizationManager.IsEnglish ? "Batch sync process stopped." : "Đã dừng tiến trình đồng bộ hàng loạt.");
             }
             catch (Exception ex)
             {
-                ShowAlertModal("Lỗi đồng bộ hàng loạt", ex.Message, isError: true);
+                ShowAlertModal(LocalizationManager.IsEnglish ? "Batch Sync Error" : "Lỗi đồng bộ hàng loạt", ex.Message, isError: true);
             }
             finally
             {
@@ -1610,11 +1626,11 @@ namespace ProfileSwitchChrome
                 try
                 {
                     Clipboard.SetText(email);
-                    ShowToast($"✓ Đã sao chép: {email}");
+                    ShowToast($"✓ {(LocalizationManager.IsEnglish ? "Copied" : "Đã sao chép")}: {email}");
                 }
                 catch
                 {
-                    ShowToast("Không thể sao chép vào bộ nhớ đệm.");
+                    ShowToast(LocalizationManager.IsEnglish ? "Cannot copy to clipboard." : "Không thể sao chép vào bộ nhớ đệm.");
                 }
             }
         }
@@ -2015,7 +2031,7 @@ namespace ProfileSwitchChrome
             }
             catch (Exception ex)
             {
-                ShowToast("Lỗi khi tải tài khoản Antigravity: " + ex.Message);
+                ShowToast(LocalizationManager.IsEnglish ? $"Error loading Antigravity accounts: {ex.Message}" : $"Lỗi khi tải tài khoản Antigravity: {ex.Message}");
             }
         }
 
@@ -2023,8 +2039,8 @@ namespace ProfileSwitchChrome
         {
             if (acc == null)
             {
-                TxtAntigravityHeroName.Text = "Chưa kết nối tài khoản";
-                TxtAntigravityHeroEmail.Text = "Chưa đăng nhập";
+                TxtAntigravityHeroName.Text = LocalizationManager.T("NoAccountConnected");
+                TxtAntigravityHeroEmail.Text = LocalizationManager.T("NotLoggedIn");
                 TxtHeroGeminiQuota.Text = "--%";
                 TxtHeroClaudeQuota.Text = "--%";
                 if (BorderAntigravityHeroPlan != null)
@@ -2139,7 +2155,7 @@ namespace ProfileSwitchChrome
                 {
                     if (_isSwitching)
                     {
-                        ShowToast("⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
+                        ShowToast(LocalizationManager.IsEnglish ? "⏳ An account switch is in progress, please wait..." : "⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
                         return;
                     }
                     BtnSwitchAntigravityAccount_Click(acc, new RoutedEventArgs());
@@ -2171,7 +2187,7 @@ namespace ProfileSwitchChrome
             }
             else
             {
-                ShowToast("Chưa có tài khoản Antigravity để xem.");
+                ShowToast(LocalizationManager.IsEnglish ? "No Antigravity accounts to view." : "Chưa có tài khoản Antigravity để xem.");
             }
         }
 
@@ -2189,7 +2205,7 @@ namespace ProfileSwitchChrome
             {
                 if (_isSwitching)
                 {
-                    ShowToast("⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
+                    ShowToast(LocalizationManager.IsEnglish ? "⏳ An account switch is in progress, please wait..." : "⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
                     return;
                 }
                 _ = ExecuteSwitchToAccountAsync(targetAcc, null);
@@ -2233,7 +2249,7 @@ namespace ProfileSwitchChrome
             if (acc.IsRefreshingQuota) return;
             acc.IsRefreshingQuota = true;
             if (btn != null) btn.IsEnabled = false;
-            ShowToast($"⚡ Đang refresh hạn mức cho {acc.Email}...");
+            ShowToast(LocalizationManager.IsEnglish ? $"⚡ Refreshing quota for {acc.Email}..." : $"⚡ Đang refresh hạn mức cho {acc.Email}...");
 
             try
             {
@@ -2246,16 +2262,16 @@ namespace ProfileSwitchChrome
                         UpdateHeroModelQuotaDisplay(_activeAntigravityAccount);
                     }
                     FilterAntigravityAccountsList();
-                    ShowToast($"✓ Đã cập nhật xong hạn mức {acc.Email}!");
+                    ShowToast(LocalizationManager.IsEnglish ? $"✓ Updated quota for {acc.Email}!" : $"✓ Đã cập nhật xong hạn mức {acc.Email}!");
                 }
                 else
                 {
-                    ShowToast($"⚠️ Không thể cập nhật hạn mức cho {acc.Email}.");
+                    ShowToast(LocalizationManager.IsEnglish ? $"⚠️ Unable to update quota for {acc.Email}." : $"⚠️ Không thể cập nhật hạn mức cho {acc.Email}.");
                 }
             }
             catch (Exception ex)
             {
-                ShowToast($"❌ Lỗi refresh {acc.Email}: {ex.Message}");
+                ShowToast(LocalizationManager.IsEnglish ? $"❌ Error refreshing {acc.Email}: {ex.Message}" : $"❌ Lỗi refresh {acc.Email}: {ex.Message}");
             }
             finally
             {
@@ -2268,13 +2284,13 @@ namespace ProfileSwitchChrome
         {
             if (_activeAntigravityAccount == null)
             {
-                ShowToast("Chưa có tài khoản Antigravity active để đo quota.");
+                ShowToast(LocalizationManager.IsEnglish ? "No active Antigravity account to measure quota." : "Chưa có tài khoản Antigravity active để đo quota.");
                 return;
             }
 
             _activeAntigravityAccount.IsRefreshingQuota = true;
-            TxtHeroGeminiQuota.Text = "Đang đo...";
-            TxtHeroClaudeQuota.Text = "Đang đo...";
+            TxtHeroGeminiQuota.Text = LocalizationManager.IsEnglish ? "Measuring..." : "Đang đo...";
+            TxtHeroClaudeQuota.Text = LocalizationManager.IsEnglish ? "Measuring..." : "Đang đo...";
 
             try
             {
@@ -2290,14 +2306,14 @@ namespace ProfileSwitchChrome
                     _activeAntigravityAccount.NotifyScopeChanged();
                     UpdateHeroModelQuotaDisplay(_activeAntigravityAccount);
                     FilterAntigravityAccountsList();
-                    ShowToast("✓ Đã cập nhật hạn mức Model Quota trực tiếp!");
+                    ShowToast(LocalizationManager.IsEnglish ? "✓ Model Quota updated directly!" : "✓ Đã cập nhật hạn mức Model Quota trực tiếp!");
                 }
                 else
                 {
                     _activeAntigravityAccount.NotifyThemeChanged();
                     _activeAntigravityAccount.NotifyScopeChanged();
                     UpdateHeroModelQuotaDisplay(_activeAntigravityAccount);
-                    ShowToast("⚠️ Không thể kết nối đo hạn mức.");
+                    ShowToast(LocalizationManager.IsEnglish ? "⚠️ Unable to connect to measure quota." : "⚠️ Không thể kết nối đo hạn mức.");
                 }
             }
             finally
@@ -2315,14 +2331,14 @@ namespace ProfileSwitchChrome
         {
             if (_isBatchMeasuring)
             {
-                if (!isSilent) ShowToast("⏳ Đang trong quá trình đo hạn mức, vui lòng đợi...");
+                if (!isSilent) ShowToast(LocalizationManager.IsEnglish ? "⏳ Quota measurement in progress, please wait..." : "⏳ Đang trong quá trình đo hạn mức, vui lòng đợi...");
                 return;
             }
 
             var accountsToMeasure = _antigravityAccounts.Where(a => a.HasFullTokens || !string.IsNullOrEmpty(a.RefreshToken)).ToList();
             if (accountsToMeasure.Count == 0)
             {
-                if (!isSilent) ShowToast("⚠️ Không tìm thấy tài khoản nào có đủ token đăng nhập.");
+                if (!isSilent) ShowToast(LocalizationManager.IsEnglish ? "⚠️ No accounts found with valid login tokens." : "⚠️ Không tìm thấy tài khoản nào có đủ token đăng nhập.");
                 return;
             }
 
@@ -2330,7 +2346,7 @@ namespace ProfileSwitchChrome
             _isBatchMeasuring = true;
             if (!isSilent)
             {
-                ShowToast($"⚡ Đang đo hạn mức trực tiếp ({maxConcurrency} luồng song song) cho {accountsToMeasure.Count} tài khoản...");
+                ShowToast(LocalizationManager.IsEnglish ? $"⚡ Measuring live quota ({maxConcurrency} parallel threads) for {accountsToMeasure.Count} accounts..." : $"⚡ Đang đo hạn mức trực tiếp ({maxConcurrency} luồng song song) cho {accountsToMeasure.Count} tài khoản...");
             }
 
             // Bật trạng thái loading cho toàn bộ tài khoản ngay lập tức
@@ -2390,16 +2406,16 @@ namespace ProfileSwitchChrome
 
                 if (!isSilent)
                 {
-                    ShowToast($"✓ Đã cập nhật xong hạn mức cho toàn bộ {accountsToMeasure.Count} tài khoản!");
+                    ShowToast(LocalizationManager.IsEnglish ? $"✓ Updated quota for all {accountsToMeasure.Count} accounts!" : $"✓ Đã cập nhật xong hạn mức cho toàn bộ {accountsToMeasure.Count} tài khoản!");
                 }
                 else
                 {
-                    ShowToast($"⚡ [Auto Quota] Đã tự động cập nhật xong hạn mức cho {accountsToMeasure.Count} tài khoản ({DateTime.Now:HH:mm:ss})");
+                    ShowToast(LocalizationManager.IsEnglish ? $"⚡ [Auto Quota] Automatically updated quota for {accountsToMeasure.Count} accounts ({DateTime.Now:HH:mm:ss})" : $"⚡ [Auto Quota] Đã tự động cập nhật xong hạn mức cho {accountsToMeasure.Count} tài khoản ({DateTime.Now:HH:mm:ss})");
                 }
             }
             catch (Exception ex)
             {
-                if (!isSilent) ShowToast($"❌ Lỗi khi đo hạn mức: {ex.Message}");
+                if (!isSilent) ShowToast(LocalizationManager.IsEnglish ? $"❌ Error measuring quota: {ex.Message}" : $"❌ Lỗi khi đo hạn mức: {ex.Message}");
             }
             finally
             {
@@ -2705,7 +2721,7 @@ namespace ProfileSwitchChrome
         {
             if (!int.TryParse(TxtCustomIntervalInput.Text.Trim(), out int num) || num <= 0)
             {
-                ShowToast("Vui lòng nhập một số nguyên lớn hơn 0");
+                ShowToast(LocalizationManager.IsEnglish ? "Please enter an integer greater than 0" : "Vui lòng nhập một số nguyên lớn hơn 0");
                 return;
             }
 
@@ -2720,12 +2736,12 @@ namespace ProfileSwitchChrome
 
             if (totalSec < 5)
             {
-                ShowToast("Khoảng thời gian tối thiểu là 5 giây");
+                ShowToast(LocalizationManager.IsEnglish ? "Minimum interval is 5 seconds" : "Khoảng thời gian tối thiểu là 5 giây");
                 return;
             }
             if (totalSec > 86400 * 7) // 7 days
             {
-                ShowToast("Khoảng thời gian tối đa là 7 ngày");
+                ShowToast(LocalizationManager.IsEnglish ? "Maximum interval is 7 days" : "Khoảng thời gian tối đa là 7 ngày");
                 return;
             }
 
@@ -2743,7 +2759,7 @@ namespace ProfileSwitchChrome
             }
 
             UpdateAutoRefreshQuotaUI();
-            ShowToast($"✓ Đã BẬT Tự động đo Quota: mỗi {_config.FormatIntervalDetailed()}");
+            ShowToast(LocalizationManager.IsEnglish ? $"✓ ENABLED Auto Quota: every {_config.FormatIntervalDetailed()}" : $"✓ Đã BẬT Tự động đo Quota: mỗi {_config.FormatIntervalDetailed()}");
         }
 
         private void UpdateAutoRefreshQuotaUI()
@@ -2809,11 +2825,11 @@ namespace ProfileSwitchChrome
 
             if (target)
             {
-                ShowToast("🔒 Đã ẩn toàn bộ Tên và Email của tất cả tài khoản");
+                ShowToast(LocalizationManager.IsEnglish ? "🔒 All account names and emails masked" : "🔒 Đã ẩn toàn bộ Tên và Email của tất cả tài khoản");
             }
             else
             {
-                ShowToast("👁 Đã hiển thị lại đầy đủ Tên và Email");
+                ShowToast(LocalizationManager.IsEnglish ? "👁 All account names and emails revealed" : "👁 Đã hiển thị lại đầy đủ Tên và Email");
             }
         }
 
@@ -4275,14 +4291,14 @@ namespace ProfileSwitchChrome
                     {
                         if (_isSwitching)
                         {
-                            ShowToast("⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
+                            ShowToast(LocalizationManager.IsEnglish ? "⏳ An account switch is in progress, please wait..." : "⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
                             return;
                         }
                         _ = ExecuteSwitchToAccountAsync(acc, null);
                     }
                     else
                     {
-                        ShowToast("ℹ Tài khoản này hiện đang được kích hoạt trong IDE");
+                        ShowToast(LocalizationManager.IsEnglish ? "ℹ This account is already active in IDE" : "ℹ Tài khoản này hiện đang được kích hoạt trong IDE");
                     }
                     break;
 
@@ -4411,28 +4427,28 @@ namespace ProfileSwitchChrome
                             _config.DefaultProfileId = p.Id;
                             _config.Save();
                             ReloadProfiles();
-                            ShowToast($"✓ Đã đặt '{p.Name}' làm mặc định!");
+                            ShowToast(LocalizationManager.IsEnglish ? $"✓ Set '{p.Name}' as default!" : $"✓ Đã đặt '{p.Name}' làm mặc định!");
                         }
                         else
                         {
-                            ShowAlertModal("Lỗi thiết lập", "Có lỗi xảy ra: " + msg, isError: true);
+                            ShowAlertModal(LocalizationManager.IsEnglish ? "Configuration Error" : "Lỗi thiết lập", LocalizationManager.IsEnglish ? "An error occurred: " + msg : "Có lỗi xảy ra: " + msg, isError: true);
                         }
                     }
                     else
                     {
-                        ShowToast("ℹ Profile này đã là mặc định");
+                        ShowToast(LocalizationManager.IsEnglish ? "ℹ This profile is already default" : "ℹ Profile này đã là mặc định");
                     }
                     break;
 
                 case 1: // Open Chrome
                     ChromeProfileManager.LaunchChrome(p.Id);
-                    ShowToast($"🚀 Đang mở Profile: {p.Name}...");
+                    ShowToast(LocalizationManager.IsEnglish ? $"🚀 Opening Profile: {p.Name}..." : $"🚀 Đang mở Profile: {p.Name}...");
                     break;
 
                 case 2: // Desktop Shortcut
                     bool scOk = ChromeProfileManager.CreateDedicatedShortcut(p.Id, p.Name);
-                    if (scOk) ShowToast($"📌 Đã tạo phím tắt cho '{p.Name}' trên Desktop!");
-                    else ShowAlertModal("Lỗi tạo phím tắt", "Không thể tạo phím tắt ra Desktop. Vui lòng kiểm tra quyền Administrator.", isError: true);
+                    if (scOk) ShowToast(LocalizationManager.IsEnglish ? $"📌 Created shortcut for '{p.Name}' on Desktop!" : $"📌 Đã tạo phím tắt cho '{p.Name}' trên Desktop!");
+                    else ShowAlertModal(LocalizationManager.IsEnglish ? "Shortcut Error" : "Lỗi tạo phím tắt", LocalizationManager.IsEnglish ? "Cannot create Desktop shortcut. Please check Administrator privileges." : "Không thể tạo phím tắt ra Desktop. Vui lòng kiểm tra quyền Administrator.", isError: true);
                     break;
             }
         }
@@ -4569,11 +4585,11 @@ namespace ProfileSwitchChrome
                 try
                 {
                     Clipboard.SetText(_activeAntigravityAccount.Email);
-                    ShowToast($"✓ Đã sao chép: {_activeAntigravityAccount.Email}");
+                    ShowToast($"✓ {(LocalizationManager.IsEnglish ? "Copied" : "Đã sao chép")}: {_activeAntigravityAccount.Email}");
                 }
                 catch
                 {
-                    ShowToast("Không thể sao chép vào bộ nhớ đệm.");
+                    ShowToast(LocalizationManager.IsEnglish ? "Cannot copy to clipboard." : "Không thể sao chép vào bộ nhớ đệm.");
                 }
                 e.Handled = true;
             }
@@ -4626,7 +4642,7 @@ namespace ProfileSwitchChrome
                 }
                 catch
                 {
-                    ShowToast("Không thể sao chép vào bộ nhớ đệm.");
+                    ShowToast(LocalizationManager.IsEnglish ? "Cannot copy to clipboard." : "Không thể sao chép vào bộ nhớ đệm.");
                 }
                 e.Handled = true;
             }
@@ -4691,10 +4707,10 @@ namespace ProfileSwitchChrome
             string targetName = _config.AntigravitySwitchTarget switch
             {
                 "cli" => "Antigravity CLI (agy)",
-                "antigravity" or "classic" => "Antigravity (Bản gốc)",
+                "antigravity" or "classic" => (LocalizationManager.IsEnglish ? "Antigravity (Original)" : "Antigravity (Bản gốc)"),
                 _ => "Antigravity IDE (2.0)"
             };
-            ShowToast($"🎯 Mục tiêu switch: {targetName}");
+            ShowToast(LocalizationManager.IsEnglish ? $"🎯 Switch target: {targetName}" : $"🎯 Mục tiêu switch: {targetName}");
         }
 
         private void UpdateTargetSwitchUi()
@@ -4738,18 +4754,18 @@ namespace ProfileSwitchChrome
             {
                 if (isCli)
                 {
-                    TxtHeroReloadIde.Text = "Làm mới CLI";
-                    BtnHeroReloadIde.ToolTip = "Làm mới tiến trình Language Server / CLI";
+                    TxtHeroReloadIde.Text = LocalizationManager.IsEnglish ? "Refresh CLI" : "Làm mới CLI";
+                    BtnHeroReloadIde.ToolTip = LocalizationManager.IsEnglish ? "Refresh Language Server / CLI process" : "Làm mới tiến trình Language Server / CLI";
                 }
                 else if (isClassic)
                 {
-                    TxtHeroReloadIde.Text = "Tải lại App";
-                    BtnHeroReloadIde.ToolTip = "Khởi động lại Antigravity Classic";
+                    TxtHeroReloadIde.Text = LocalizationManager.IsEnglish ? "Reload App" : "Tải lại App";
+                    BtnHeroReloadIde.ToolTip = LocalizationManager.IsEnglish ? "Restart Antigravity Classic" : "Khởi động lại Antigravity Classic";
                 }
                 else
                 {
-                    TxtHeroReloadIde.Text = "Tải lại IDE";
-                    BtnHeroReloadIde.ToolTip = "Khởi động lại Antigravity IDE (2.0)";
+                    TxtHeroReloadIde.Text = LocalizationManager.T("ReloadIdeBtn");
+                    BtnHeroReloadIde.ToolTip = LocalizationManager.T("ReloadIdeTip");
                 }
             }
         }
@@ -4860,7 +4876,7 @@ namespace ProfileSwitchChrome
         {
             if (_isSwitching)
             {
-                ShowToast("⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
+                ShowToast(LocalizationManager.IsEnglish ? "⏳ An account switch is in progress, please wait..." : "⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
                 return;
             }
             if (sender is Button btn && btn.Tag is AntigravityAccountInfo target)
@@ -4873,7 +4889,7 @@ namespace ProfileSwitchChrome
         {
             if (_isSwitching)
             {
-                ShowToast("⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
+                ShowToast(LocalizationManager.IsEnglish ? "⏳ An account switch is in progress, please wait..." : "⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
                 return;
             }
             if (_recommendedAccount != null)
@@ -4886,7 +4902,7 @@ namespace ProfileSwitchChrome
         {
             if (_isSwitching)
             {
-                ShowToast("⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
+                ShowToast(LocalizationManager.IsEnglish ? "⏳ An account switch is in progress, please wait..." : "⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
                 return;
             }
 
@@ -4899,7 +4915,7 @@ namespace ProfileSwitchChrome
                 // ═══ Auto-login if tokens are incomplete ═══════════════════
                 if (!target.HasFullTokens)
                 {
-                    ShowToast($"🔑 Account '{target.Email}' chưa có đủ tokens. Đang mở OAuth login...");
+                    ShowToast(LocalizationManager.IsEnglish ? $"🔑 Account '{target.Email}' does not have full tokens. Opening OAuth login..." : $"🔑 Account '{target.Email}' chưa có đủ tokens. Đang mở OAuth login...");
 
                     if (_oauthService != null)
                     {
@@ -4938,11 +4954,11 @@ namespace ProfileSwitchChrome
                             existing.RawUserStatus = target.RawUserStatus;
                         }
                         AntigravityProfileManager.SaveAccountsList(list);
-                        ShowToast($"✓ Đã lấy tokens cho '{target.EmailMasked}'! Đang switch...");
+                        ShowToast(LocalizationManager.IsEnglish ? $"✓ Acquired tokens for '{target.EmailMasked}'! Switching..." : $"✓ Đã lấy tokens cho '{target.EmailMasked}'! Đang switch...");
                     }
                     else
                     {
-                        ShowToast("⚠️ OAuth login bị hủy. Không thể switch.");
+                        ShowToast(LocalizationManager.IsEnglish ? "⚠️ OAuth login cancelled. Cannot switch." : "⚠️ OAuth login bị hủy. Không thể switch.");
                         return;
                     }
 
@@ -4956,7 +4972,7 @@ namespace ProfileSwitchChrome
                         DateTimeOffset.UtcNow.ToUnixTimeSeconds() >= (target.ExpiryTimestamp - 180);
                     if (isExpired || string.IsNullOrEmpty(target.ApiKey))
                     {
-                        ShowToast($"🔄 Đang tự động làm mới access token cho '{target.EmailMasked}'...");
+                        ShowToast(LocalizationManager.IsEnglish ? $"🔄 Automatically refreshing access token for '{target.EmailMasked}'..." : $"🔄 Đang tự động làm mới access token cho '{target.EmailMasked}'...");
                         var refreshed = await OAuthLoginService.RefreshAccessTokenAsync(target.RefreshToken);
                         if (refreshed != null)
                         {
@@ -4982,11 +4998,11 @@ namespace ProfileSwitchChrome
                 string targetDisplayName = switchTarget switch
                 {
                     "cli" => "Antigravity CLI",
-                    "antigravity" or "classic" => "Antigravity",
+                    "antigravity" or "classic" => (LocalizationManager.IsEnglish ? "Antigravity (Original)" : "Antigravity"),
                     _ => "Antigravity IDE"
                 };
 
-                ShowToast($"⏳ Đang switch sang '{target.EmailMasked}' ({targetDisplayName})...");
+                ShowToast(LocalizationManager.IsEnglish ? $"⏳ Switching to '{target.EmailMasked}' ({targetDisplayName})..." : $"⏳ Đang switch sang '{target.EmailMasked}' ({targetDisplayName})...");
 
                 bool success = false;
                 string message = "";
@@ -5009,7 +5025,7 @@ namespace ProfileSwitchChrome
 
                     if (success)
                     {
-                        ShowToast($"✓ '{target.Email}' — Đang áp dụng vào IDE...");
+                        ShowToast(LocalizationManager.IsEnglish ? $"✓ '{target.Email}' — Applying to IDE..." : $"✓ '{target.Email}' — Đang áp dụng vào IDE...");
                         await System.Threading.Tasks.Task.Run(() =>
                             success = AntigravityProfileManager.ApplyAccountToIde(target, out message));
                     }
@@ -5022,7 +5038,7 @@ namespace ProfileSwitchChrome
                     target.IsEmailHidden = _config.HideAllEmails;
                     TxtAntigravityHeroName.Text = target.DisplayNameMasked;
                     TxtAntigravityHeroEmail.Text = string.IsNullOrEmpty(target.Email)
-                        ? "Chưa đồng bộ" : target.EmailMasked;
+                        ? (LocalizationManager.IsEnglish ? "Not synced" : "Chưa đồng bộ") : target.EmailMasked;
                     TxtAntigravityHeroInitial.Text = target.InitialLetter;
 
                     if (target.HasAvatar && target.AvatarSource != null)
@@ -5061,12 +5077,12 @@ namespace ProfileSwitchChrome
                 }
                 else
                 {
-                    ShowAlertModal("Lỗi chuyển tài khoản", message, isError: true);
+                    ShowAlertModal(LocalizationManager.IsEnglish ? "Switch Account Error" : "Lỗi chuyển tài khoản", message, isError: true);
                 }
             }
             catch (Exception ex)
             {
-                ShowAlertModal("Lỗi ngoại lệ", ex.Message, isError: true);
+                ShowAlertModal(LocalizationManager.IsEnglish ? "Exception Error" : "Lỗi ngoại lệ", ex.Message, isError: true);
             }
             finally
             {
@@ -5079,7 +5095,7 @@ namespace ProfileSwitchChrome
         {
             if (_isSwitching)
             {
-                ShowToast("⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
+                ShowToast(LocalizationManager.IsEnglish ? "⏳ An account switch is in progress, please wait..." : "⏳ Đang có tiến trình chuyển tài khoản, vui lòng chờ...");
                 return;
             }
 
@@ -5089,19 +5105,19 @@ namespace ProfileSwitchChrome
                 string switchTarget = (_config.AntigravitySwitchTarget ?? "ide").ToLowerInvariant();
                 if (switchTarget == "cli")
                 {
-                    ShowToast("⏳ Đang làm mới token Antigravity CLI...");
+                    ShowToast(LocalizationManager.IsEnglish ? "⏳ Refreshing Antigravity CLI token..." : "⏳ Đang làm mới token Antigravity CLI...");
                     var activeAcc = AntigravityProfileManager.GetCurrentActiveAccount() 
                         ?? AntigravityProfileManager.LoadAllAccounts().FirstOrDefault(a => a.IsActive);
                     if (activeAcc != null)
                     {
                         AntigravityProfileManager.SyncCliAndGoogleTokens(activeAcc);
                     }
-                    ShowToast("✓ Đã đồng bộ token cho Antigravity CLI (agy)!");
+                    ShowToast(LocalizationManager.IsEnglish ? "✓ Token synced for Antigravity CLI (agy)!" : "✓ Đã đồng bộ token cho Antigravity CLI (agy)!");
                     return;
                 }
                 else if (switchTarget == "antigravity" || switchTarget == "classic")
                 {
-                    ShowToast("⏳ Đang khởi động lại Antigravity...");
+                    ShowToast(LocalizationManager.IsEnglish ? "⏳ Restarting Antigravity..." : "⏳ Đang khởi động lại Antigravity...");
                     string? exePath = AntigravityProfileManager.FindAntigravityClassicExePath();
                     var procs = Process.GetProcessesByName("Antigravity");
                     foreach (var p in procs) { try { p.Kill(); } catch { } }
@@ -5109,26 +5125,26 @@ namespace ProfileSwitchChrome
                     if (!string.IsNullOrEmpty(exePath) && System.IO.File.Exists(exePath))
                     {
                         Process.Start(new ProcessStartInfo { FileName = exePath, UseShellExecute = true });
-                        ShowToast("✓ Đã khởi động lại Antigravity!");
+                        ShowToast(LocalizationManager.IsEnglish ? "✓ Antigravity restarted!" : "✓ Đã khởi động lại Antigravity!");
                     }
                     else
                     {
-                        ShowToast("⚠️ Không tìm thấy exe Antigravity. Vui lòng mở thủ công.");
+                        ShowToast(LocalizationManager.IsEnglish ? "⚠️ Antigravity exe not found. Please open manually." : "⚠️ Không tìm thấy exe Antigravity. Vui lòng mở thủ công.");
                     }
                     return;
                 }
 
-                ShowToast("⏳ Đang khởi động lại Antigravity IDE...");
+                ShowToast(LocalizationManager.IsEnglish ? "⏳ Restarting Antigravity IDE..." : "⏳ Đang khởi động lại Antigravity IDE...");
                 bool ok = false;
                 await System.Threading.Tasks.Task.Run(() =>
                     ok = AntigravityProfileManager.KillAndRestartAntigravityIde());
                 if (ok)
                 {
-                    ShowToast("✓ Đã khởi động lại Antigravity IDE với account hiện tại!");
+                    ShowToast(LocalizationManager.IsEnglish ? "✓ Restarted Antigravity IDE with active account!" : "✓ Đã khởi động lại Antigravity IDE với account hiện tại!");
                 }
                 else
                 {
-                    ShowToast("⚠️ Không tìm thấy exe IDE. Vui lòng mở lại Antigravity IDE thủ công.");
+                    ShowToast(LocalizationManager.IsEnglish ? "⚠️ IDE exe not found. Please open Antigravity IDE manually." : "⚠️ Không tìm thấy exe IDE. Vui lòng mở lại Antigravity IDE thủ công.");
                 }
             }
             finally
@@ -5145,17 +5161,17 @@ namespace ProfileSwitchChrome
                 var captured = AntigravityProfileManager.CaptureCurrentAccount();
                 if (captured != null)
                 {
-                    ShowToast($"✓ Đã lưu tài khoản '{captured.Email}' vào danh sách quản lý!");
+                    ShowToast(LocalizationManager.IsEnglish ? $"✓ Saved account '{captured.Email}' to managed list!" : $"✓ Đã lưu tài khoản '{captured.Email}' vào danh sách quản lý!");
                     ReloadAntigravityAccounts();
                 }
                 else
                 {
-                    ShowAlertModal("Thông báo", "Không tìm thấy phiên đăng nhập hợp lệ trong state.vscdb của Antigravity IDE.", isError: false);
+                    ShowAlertModal(LocalizationManager.IsEnglish ? "Notice" : "Thông báo", LocalizationManager.IsEnglish ? "Valid login session not found in Antigravity IDE state.vscdb." : "Không tìm thấy phiên đăng nhập hợp lệ trong state.vscdb của Antigravity IDE.", isError: false);
                 }
             }
             catch (Exception ex)
             {
-                ShowAlertModal("Lỗi lưu tài khoản", ex.Message, isError: true);
+                ShowAlertModal(LocalizationManager.IsEnglish ? "Error Saving Account" : "Lỗi lưu tài khoản", ex.Message, isError: true);
             }
         }
 
@@ -5166,17 +5182,17 @@ namespace ProfileSwitchChrome
                 int count = AntigravityProfileManager.ImportFromAntigravityTools();
                 if (count > 0)
                 {
-                    ShowToast($"✓ Đã import thành công {count} tài khoản từ Antigravity Tools!");
+                    ShowToast(LocalizationManager.IsEnglish ? $"✓ Successfully imported {count} accounts from Antigravity Tools!" : $"✓ Đã import thành công {count} tài khoản từ Antigravity Tools!");
                     ReloadAntigravityAccounts();
                 }
                 else
                 {
-                    ShowToast("Không tìm thấy tài khoản mới nào trong thư mục Antigravity Tools.");
+                    ShowToast(LocalizationManager.IsEnglish ? "No new accounts found in Antigravity Tools directory." : "Không tìm thấy tài khoản mới nào trong thư mục Antigravity Tools.");
                 }
             }
             catch (Exception ex)
             {
-                ShowAlertModal("Lỗi import", ex.Message, isError: true);
+                ShowAlertModal(LocalizationManager.IsEnglish ? "Import Error" : "Lỗi import", ex.Message, isError: true);
             }
         }
 
@@ -5187,11 +5203,11 @@ namespace ProfileSwitchChrome
                 try
                 {
                     Clipboard.SetText(email);
-                    ShowToast($"✓ Đã sao chép: {email}");
+                    ShowToast($"✓ {(LocalizationManager.IsEnglish ? "Copied" : "Đã sao chép")}: {email}");
                 }
                 catch
                 {
-                    ShowToast("Không thể sao chép vào bộ nhớ đệm.");
+                    ShowToast(LocalizationManager.IsEnglish ? "Cannot copy to clipboard." : "Không thể sao chép vào bộ nhớ đệm.");
                 }
             }
         }
@@ -5207,15 +5223,17 @@ namespace ProfileSwitchChrome
         private void TriggerDeleteAccount(AntigravityAccountInfo target)
         {
             ShowConfirmModal(
-                "Xóa tài khoản",
-                $"Bạn có chắc chắn muốn xóa tài khoản '{target.DisplayName}' ({target.Email}) khỏi danh sách quản lý không?\n\n(Lưu ý: Thao tác này chỉ xóa khỏi danh sách quản lý, không ảnh hưởng đến tài khoản Google của bạn).",
-                "Đồng ý xóa",
+                LocalizationManager.IsEnglish ? "Delete Account" : "Xóa tài khoản",
+                LocalizationManager.IsEnglish 
+                    ? $"Are you sure you want to remove account '{target.DisplayName}' ({target.Email}) from the managed list?\n\n(Note: This only removes it from the manager, it does not affect your Google account)." 
+                    : $"Bạn có chắc chắn muốn xóa tài khoản '{target.DisplayName}' ({target.Email}) khỏi danh sách quản lý không?\n\n(Lưu ý: Thao tác này chỉ xóa khỏi danh sách quản lý, không ảnh hưởng đến tài khoản Google của bạn).",
+                LocalizationManager.IsEnglish ? "Delete" : "Đồng ý xóa",
                 () =>
                 {
                     var list = AntigravityProfileManager.LoadAllAccounts();
                     list.RemoveAll(a => string.Equals(a.Email, target.Email, StringComparison.OrdinalIgnoreCase));
                     AntigravityProfileManager.SaveAccountsList(list);
-                    ShowToast($"✓ Đã xóa tài khoản {target.Email}");
+                    ShowToast(LocalizationManager.IsEnglish ? $"✓ Removed account {target.Email}" : $"✓ Đã xóa tài khoản {target.Email}");
                     ReloadAntigravityAccounts();
                 },
                 isDanger: true);
@@ -5225,7 +5243,7 @@ namespace ProfileSwitchChrome
         {
             ReloadAntigravityAccounts();
             UpdateAntigravityRunningStatus();
-            ShowToast("✓ Đã làm mới dữ liệu tài khoản Antigravity");
+            ShowToast(LocalizationManager.IsEnglish ? "✓ Antigravity account data refreshed" : "✓ Đã làm mới dữ liệu tài khoản Antigravity");
         }
 
         private async void BtnRestoreChatHistory_Click(object sender, RoutedEventArgs e)
@@ -5277,12 +5295,12 @@ namespace ProfileSwitchChrome
                 }
                 else
                 {
-                    ShowToast(res?.Message ?? "Lỗi không xác định");
+                    ShowToast(res?.Message ?? (LocalizationManager.IsEnglish ? "Unknown error" : "Lỗi không xác định"));
                 }
             }
             catch (Exception ex)
             {
-                ShowToast($"Lỗi khôi phục: {ex.Message}");
+                ShowToast(LocalizationManager.IsEnglish ? $"Restore error: {ex.Message}" : $"Lỗi khôi phục: {ex.Message}");
             }
             finally
             {
@@ -5305,7 +5323,7 @@ namespace ProfileSwitchChrome
         {
             if (_oauthService != null)
             {
-                ShowToast("Đang dừng phiên đăng nhập cũ để bắt đầu phiên mới...");
+                ShowToast(LocalizationManager.IsEnglish ? "Stopping previous login session to start a new one..." : "Đang dừng phiên đăng nhập cũ để bắt đầu phiên mới...");
                 try
                 {
                     _oauthCts?.Cancel();
@@ -5401,11 +5419,11 @@ namespace ProfileSwitchChrome
             {
                 if (!string.IsNullOrWhiteSpace(chromeProfileId))
                 {
-                    ShowToast($"⚡ Đang mở Chrome Profile '{chromeProfileId}' để sync '{loginHint}'...");
+                    ShowToast(LocalizationManager.IsEnglish ? $"⚡ Opening Chrome Profile '{chromeProfileId}' to sync '{loginHint}'..." : $"⚡ Đang mở Chrome Profile '{chromeProfileId}' để sync '{loginHint}'...");
                 }
                 else
                 {
-                    ShowToast("🌐 Đang mở trình duyệt đăng nhập...");
+                    ShowToast(LocalizationManager.IsEnglish ? "🌐 Opening browser for sign-in..." : "🌐 Đang mở trình duyệt đăng nhập...");
                 }
 
                 var account = await _oauthService.StartLoginAsync(_oauthCts.Token, loginHint, chromeProfileId);
@@ -5422,7 +5440,7 @@ namespace ProfileSwitchChrome
                     {
                         list.Add(account);
                         AntigravityProfileManager.SaveAccountsList(list);
-                        ShowToast($"✓ Đã đồng bộ tài khoản '{account.EmailMasked}' vào Antigravity!");
+                        ShowToast(LocalizationManager.IsEnglish ? $"✓ Synced account '{account.EmailMasked}' to Antigravity!" : $"✓ Đã đồng bộ tài khoản '{account.EmailMasked}' vào Antigravity!");
                     }
                     else
                     {
@@ -5437,7 +5455,7 @@ namespace ProfileSwitchChrome
                         existing.IsNameHidden = _config.HideAllNames;
                         existing.IsEmailHidden = _config.HideAllEmails;
                         AntigravityProfileManager.SaveAccountsList(list);
-                        ShowToast($"✓ Đã cập nhật token Antigravity cho '{account.EmailMasked}'!");
+                        ShowToast(LocalizationManager.IsEnglish ? $"✓ Updated Antigravity token for '{account.EmailMasked}'!" : $"✓ Đã cập nhật token Antigravity cho '{account.EmailMasked}'!");
                     }
 
                     ReloadAntigravityAccounts();
@@ -5647,7 +5665,44 @@ namespace ProfileSwitchChrome
             if (TxtChkGuardTitle != null) TxtChkGuardTitle.Text = LocalizationManager.IsEnglish ? "Auto Protect Profile" : "Tự động bảo vệ Profile";
             if (TxtChkGuardSub != null) TxtChkGuardSub.Text = LocalizationManager.IsEnglish ? "Restore on Chrome close" : "Khôi phục khi tắt Chrome";
             if (TxtChkStartupTitle != null) TxtChkStartupTitle.Text = LocalizationManager.IsEnglish ? "Start with Windows" : "Khởi động cùng Windows";
+            if (TxtChkStartupSub != null) TxtChkStartupSub.Text = LocalizationManager.IsEnglish ? "Run in background to protect system" : "Chạy nền bảo vệ hệ thống";
             UpdateSilentSyncUI();
+
+            // Google Accounts Modal
+            if (TxtAccountsModalTitle != null) TxtAccountsModalTitle.Text = LocalizationManager.IsEnglish ? "Google Accounts in Profile" : "Tài khoản Google trong Profile";
+            if (BtnCloseAccountsModalTop != null) BtnCloseAccountsModalTop.ToolTip = LocalizationManager.IsEnglish ? "Close" : "Đóng";
+            if (BtnBatchSyncAllInModal != null)
+            {
+                BtnBatchSyncAllInModal.Content = LocalizationManager.IsEnglish ? "⚡ Sync All to Antigravity" : "⚡ Đồng bộ tất cả vào Antigravity";
+                BtnBatchSyncAllInModal.ToolTip = LocalizationManager.IsEnglish 
+                    ? "Sync all Google accounts in this Profile to Antigravity (confirm in browser, tab closes automatically when done)"
+                    : "Đồng bộ toàn bộ tài khoản Google trong Profile này vào Antigravity (bấm xác nhận trên trình duyệt, tab tự đóng khi hoàn tất)";
+            }
+            if (TxtCancelSyncBannerText != null) TxtCancelSyncBannerText.Text = LocalizationManager.IsEnglish ? "Stop Sync" : "Dừng đồng bộ";
+            if (BtnCancelSyncBanner != null) BtnCancelSyncBanner.ToolTip = LocalizationManager.IsEnglish ? "Immediately stop the batch sync process" : "Dừng ngay lập tức toàn bộ quá trình đồng bộ hàng loạt";
+            if (TxtCancelSyncInModalText != null) TxtCancelSyncInModalText.Text = LocalizationManager.IsEnglish ? "Stop Sync" : "Dừng đồng bộ";
+            if (BtnCancelSyncInModal != null) BtnCancelSyncInModal.ToolTip = LocalizationManager.IsEnglish ? "Immediately stop the batch sync process" : "Dừng ngay lập tức toàn bộ quá trình đồng bộ đang chạy";
+            if (BtnCloseAccountsModalBottom != null) BtnCloseAccountsModalBottom.Content = LocalizationManager.IsEnglish ? "Close" : "Đóng";
+
+            // Custom Interval Modal
+            if (TxtCustomIntervalTitle != null) TxtCustomIntervalTitle.Text = LocalizationManager.T("CustomIntervalTitle");
+            if (TxtCustomIntervalSub != null) TxtCustomIntervalSub.Text = LocalizationManager.T("CustomIntervalSubtitle");
+            if (TxtCustomIntervalHint != null) TxtCustomIntervalHint.Text = LocalizationManager.T("CustomIntervalDesc");
+            if (TxtCustomIntervalInputLabel != null) TxtCustomIntervalInputLabel.Text = LocalizationManager.IsEnglish ? "Interval duration:" : "Khoảng thời gian chu kỳ:";
+            if (CmbItemSeconds != null) CmbItemSeconds.Content = LocalizationManager.T("UnitSeconds");
+            if (CmbItemMinutes != null) CmbItemMinutes.Content = LocalizationManager.T("UnitMinutes");
+            if (CmbItemHours != null) CmbItemHours.Content = LocalizationManager.T("UnitHours");
+            if (TxtCustomIntervalPresetsLabel != null) TxtCustomIntervalPresetsLabel.Text = LocalizationManager.IsEnglish ? "⚡ Quick Presets:" : "⚡ Chọn nhanh chu kỳ gợi ý:";
+            if (BtnCustomIntervalCancel != null) BtnCustomIntervalCancel.Content = LocalizationManager.T("Cancel");
+            if (TxtCustomIntervalApplyText != null) TxtCustomIntervalApplyText.Text = LocalizationManager.T("ApplyAndEnable");
+
+            // Batch Sync Guidance / Confirmation Modal
+            if (TxtBatchSyncHeaderTitle != null) TxtBatchSyncHeaderTitle.Text = LocalizationManager.IsEnglish ? "ACCOUNTS PENDING SYNC" : "DANH SÁCH TÀI KHOẢN CHỜ ĐỒNG BỘ";
+            if (TxtBatchSyncGuidance != null) TxtBatchSyncGuidance.Text = LocalizationManager.IsEnglish 
+                ? "Chrome will open each account in turn for confirmation. The app will auto-close tabs and save tokens to Antigravity upon completion."
+                : "Trình duyệt Chrome sẽ lần lượt mở từng tài khoản để bạn xác nhận. Hệ thống sẽ tự đóng tab và lưu token vào Antigravity ngay khi hoàn tất.";
+            if (TxtAutoClickInModalTitle != null) TxtAutoClickInModalTitle.Text = LocalizationManager.IsEnglish ? "⚡ Auto-click Sign in button" : "⚡ Tự động bấm nút Đăng nhập (Auto-Click)";
+            if (TxtAutoClickInModalSub != null) TxtAutoClickInModalSub.Text = LocalizationManager.IsEnglish ? "Only clicks when the Sign in button is detected on screen" : "Chỉ click khi phát hiện đúng nút Đăng nhập trên màn hình";
 
             // Tab 2: Antigravity View - Hero
             if (TxtHeroActiveBadge != null) TxtHeroActiveBadge.Text = LocalizationManager.T("HeroActiveBadge");

@@ -114,9 +114,9 @@
 
                     <!-- Title -->
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="ĐỒNG BỘ GOOGLE" FontSize="10.5" FontWeight="Bold" 
+                        <TextBlock x:Name="TxtFloatingTitle" Text="ĐỒNG BỘ GOOGLE" FontSize="10.5" FontWeight="Bold" 
                                    Foreground="{DynamicResource ThemeTextPrimary}"/>
-                        <TextBlock Text="Điều khiển tiến trình" FontSize="9" 
+                        <TextBlock x:Name="TxtFloatingSubtitle" Text="Điều khiển tiến trình" FontSize="9" 
                                    Foreground="{DynamicResource ThemeTextSecondary}"/>
                     </StackPanel>
 
@@ -129,7 +129,7 @@
                     </Border>
 
                     <!-- Drag Grip Indicator -->
-                    <Border Grid.Column="3" Width="20" Height="20" CornerRadius="4" Background="Transparent" 
+                    <Border x:Name="BorderDragGrip" Grid.Column="3" Width="20" Height="20" CornerRadius="4" Background="Transparent" 
                             Cursor="SizeAll" ToolTip="Nhấp giữ chuột để kéo di chuyển" VerticalAlignment="Center">
                         <TextBlock Text="⠿" FontSize="13" Foreground="{DynamicResource ThemeTextMuted}" 
                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -177,9 +177,9 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="Tự động bấm Đăng nhập" FontSize="10" FontWeight="SemiBold" 
+                            <TextBlock x:Name="TxtAutoClickFloatingTitle" Text="Tự động bấm Đăng nhập" FontSize="10" FontWeight="SemiBold" 
                                        Foreground="{DynamicResource ThemeTextPrimary}"/>
-                            <TextBlock Text="Chỉ click khi phát hiện thấy nút" FontSize="8.5" 
+                            <TextBlock x:Name="TxtAutoClickFloatingSub" Text="Chỉ click khi phát hiện thấy nút" FontSize="8.5" 
                                        Foreground="{DynamicResource ThemeTextSecondary}"/>
                         </StackPanel>
                         <CheckBox x:Name="ChkAutoClickFloating" Grid.Column="1" 
@@ -198,20 +198,20 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Skip Button -->
-                    <Button Grid.Column="0" Style="{StaticResource FloatingSkipBtn}" 
+                    <Button x:Name="BtnSkip" Grid.Column="0" Style="{StaticResource FloatingSkipBtn}" 
                             Padding="6,6" Click="BtnSkip_Click"
                             Content="Bỏ qua"
                             ToolTip="Bỏ qua tài khoản này (hoặc bấm ✕ trên Chrome)"/>
 
                     <!-- Stop Button -->
-                    <Button Grid.Column="2" Style="{StaticResource FloatingStopBtn}" 
+                    <Button x:Name="BtnStop" Grid.Column="2" Style="{StaticResource FloatingStopBtn}" 
                             Padding="6,6" Click="BtnStop_Click"
                             Content="Dừng đồng bộ"
                             ToolTip="Dừng hoàn toàn toàn bộ tiến trình đồng bộ hàng loạt"/>
                 </Grid>
 
                 <!-- Helpful Hint -->
-                <TextBlock Text="Bấm ✕ trên Chrome để bỏ qua • Chỉ dừng khi ấn Dừng" 
+                <TextBlock x:Name="TxtHint" Text="Bấm ✕ trên Chrome để bỏ qua • Chỉ dừng khi ấn Dừng" 
                            FontSize="9" Foreground="{DynamicResource ThemeTextMuted}" 
                            HorizontalAlignment="Center" Margin="0,2,0,0"/>
             </StackPanel>
