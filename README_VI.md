@@ -30,11 +30,13 @@
 2. [Tính năng cốt lõi](#-tính-năng-cốt-lõi)
    - [Phân hệ 1: Antigravity AI Ecosystem & Quota Monitor](#1-phân-hệ-antigravity-ai-ecosystem--quota-monitor)
    - [Phân hệ 2: Google Chrome Profile & Workspace Manager](#2-phân-hệ-google-chrome-profile--workspace-manager)
-   - [Trải nghiệm giao diện & Bảo mật thông tin](#3-trải-nghiệm-giao-diện--bảo-mật-thông-tin)
+   - [Phân hệ 3: Đồng bộ Tài khoản Google sang Antigravity (1-Click & Batch Sync)](#3-phân-hệ-đồng-bộ-tài-khoản-google-sang-antigravity-1-click--batch-sync)
+   - [Phân hệ 4: Trải nghiệm giao diện & Bảo mật thông tin](#4-trải-nghiệm-giao-diện--bảo-mật-thông-tin)
 3. [Tải về & Cài đặt](#-tải-về--cài-đặt)
 4. [Hướng dẫn sử dụng](#-hướng-dẫn-sử-dụng)
    - [Quản lý tài khoản & Hạn mức Antigravity AI](#hướng-dẫn-quản-trị-antigravity-ai)
    - [Thiết lập Chrome Profile mặc định 3 lớp](#hướng-dẫn-cấu-hình-chrome-profile-mặc-định)
+   - [Đồng bộ Tài khoản Google vào Antigravity (Batch Sync & Auto-Consent)](#hướng-dẫn-đồng-bộ-tài-khoản-google-vào-antigravity-batch-sync)
    - [Sao lưu & Khôi phục lịch sử Chat](#hướng-dẫn-chat-backup--restore)
    - [Đổi ngôn ngữ giao diện (Anh / Việt)](#hướng-dẫn-đổi-ngôn-ngữ-giao-diện-anh--việt)
 5. [Hướng dẫn Biên dịch & Đóng gói (Build)](#-hướng-dẫn-biên-dịch--đóng-gói-build)
@@ -102,7 +104,50 @@
 
 ---
 
-### 3. Trải nghiệm giao diện & Bảo mật thông tin
+### 3. Phân hệ Đồng bộ Tài khoản Google sang Antigravity (1-Click & Batch Sync)
+
+Cầu nối mạnh mẽ giữa các không gian làm việc Google Chrome và hệ sinh thái Antigravity AI. Cho phép nạp toàn bộ danh tính tài khoản Google có sẵn trong Profile sang Antigravity Hub hoàn toàn tự động chỉ với 1 cú click hoặc đồng bộ hàng loạt.
+
+<p align="center">
+  <img src="demo/GoogleAccInProfile.png" alt="Danh sách tài khoản Google trong Profile" width="96%" style="border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);" />
+  <br />
+  <em>📸 Cửa sổ Tra cứu Tài khoản trong Profile: Liệt kê chi tiết tài khoản Google, trạng thái đã đồng bộ / chưa đồng bộ, sao chép email và kích hoạt đồng bộ từng tài khoản</em>
+</p>
+
+* 🔍 **Tra cứu chuyên sâu tài khoản Google trong Profile:**
+  - Tự động phát hiện và hiển thị mọi tài khoản Google đang đăng nhập trong từng Chrome Profile mà không cần mở trình duyệt.
+  - Huy hiệu trạng thái trực quan: Nhận biết tài khoản nào đã có trong Antigravity AI và tài khoản nào chưa được đồng bộ.
+  - Thao tác nhanh cho từng tài khoản: **Đồng bộ vào Antigravity**, **Sao chép Email** và chế độ che giấu email nhạy cảm.
+
+<p align="center">
+  <img src="demo/SycnAntigravity1.png" alt="Hộp thoại thiết lập Đồng bộ hàng loạt" width="96%" style="border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);" />
+  <br />
+  <em>📸 Hộp thoại Đồng bộ Hàng loạt (Batch Sync Modal): Thiết lập quy trình tự động bấm xác nhận đăng nhập và tự tắt tab sau khi hoàn tất</em>
+</p>
+
+* ⚡ **Đồng bộ Hàng loạt Tốc độ cao (Batch Sync Pipeline):**
+  - Đưa toàn bộ tài khoản Google trong Profile vào hàng đợi đồng bộ liên tục hoàn toàn tự động.
+  - Tiết kiệm tối đa thời gian cho nhà phát triển khi quản lý hệ thống hàng chục hoặc hàng trăm tài khoản AI.
+  - Tùy chọn thông minh: **Tự động bấm đăng nhập (Auto-click Sign-in)** và **Tự động đóng tab trình duyệt khi hoàn tất**.
+
+<p align="center">
+  <img src="demo/SycnAntigravity2.png" alt="Thanh điều khiển nổi Batch Sync Floating Bar khi đang đồng bộ" width="96%" style="border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);" />
+  <br />
+  <em>📸 Thanh điều khiển nổi Floating Bar & Tiến trình thời gian thực: Hiển thị tiến độ real-time kèm nút Bỏ qua (Skip) và Dừng đồng bộ (Stop) linh hoạt</em>
+</p>
+
+* 🤖 **Tự động Bấm Đăng nhập & Xác thực thông minh (`GoogleOAuthAutoConsentService`):**
+  - Cơ chế tự động nhận diện màn hình cấp quyền OAuth của Google, tự động click chọn tài khoản và chấp thuận xác thực.
+  - Thu nhận OAuth Access/Refresh Token thông qua máy chủ lắng nghe nội bộ và tự động tắt tab trình duyệt ngay khi nhận token.
+* 🪟 **Thanh điều khiển nổi bám màn hình (Batch Sync Floating Bar):**
+  - Giao diện thanh nổi (HUD) hiện đại luôn nổi trên cùng màn hình, hiển thị tiến độ thời gian thực (`Tài khoản X / Y`, email đang xử lý, thanh tiến trình màu xanh).
+  - Tương tác tức thì: Dễ dàng bấm **Bỏ qua (Skip)** tài khoản gặp sự cố hoặc **Dừng đồng bộ (Stop)** bất cứ lúc nào mà không làm ảnh hưởng đến tiến trình làm việc trên IDE.
+* 🔒 **Bảo mật cục bộ tuyệt đối:**
+  - Toàn bộ Token và thông tin định danh được lưu trữ hoàn toàn nội bộ trên máy người dùng, không qua bất kỳ máy chủ trung gian nào.
+
+---
+
+### 4. Trải nghiệm giao diện & Bảo mật thông tin
 
 * 🌐 **Đa ngôn ngữ toàn diện (Chuyển đổi tức thì 🇻🇳 VI / 🇺🇸 EN):**
   - Nút chuyển đổi nằm ngay tại **thanh Header góc trên bên phải** (nút hiển thị `🇻🇳 VI` hoặc `🇺🇸 EN`).
@@ -147,6 +192,15 @@ Người dùng có thể lựa chọn 1 trong 2 phiên bản tùy theo nhu cầu
    - `Desktop/Taskbar shortcuts`: Tự động gắn Profile vào shortcut.
    - `Mở link ngoài (Zalo, Mail)`: Mở đúng Profile khi click liên kết bên ngoài.
    - `Tự động bảo vệ Profile`: Duy trì khôi phục Profile khi tắt Chrome.
+
+### Hướng dẫn Đồng bộ Tài khoản Google vào Antigravity (Batch Sync)
+1. Tại tab **🌐 Chrome**, tìm Profile chứa các tài khoản Google bạn muốn nạp vào Antigravity.
+2. Bấm vào nút **Tài khoản Google** trên thẻ Profile để mở cửa sổ danh sách tài khoản (`demo/GoogleAccInProfile.png`).
+3. **Đồng bộ từng tài khoản:** Nhấp nút **Đồng bộ vào Antigravity** cạnh tài khoản tương ứng.
+4. **Đồng bộ hàng loạt:** Nhấp **Đồng bộ tất cả vào Antigravity** ở góc trên bên phải để mở hộp thoại xác nhận (`demo/SycnAntigravity1.png`).
+5. Đảm bảo tích chọn mục **Tự động bấm đăng nhập (Auto-click Sign-in)**, sau đó nhấn **Bắt đầu đồng bộ**.
+6. **Thanh điều khiển nổi (Floating Bar)** (`demo/SycnAntigravity2.png`) sẽ xuất hiện trên màn hình và tự động thực hiện tiến trình. Bạn có thể nhấn **Bỏ qua** hoặc **Dừng** bất kỳ lúc nào.
+7. Khi hoàn tất, quay lại tab **🚀 Antigravity** để xem ngay danh sách tài khoản mới và bắt đầu theo dõi hạn mức Quota!
 
 ### Hướng dẫn Chat Backup & Restore
 - Tính năng này hoạt động hoàn toàn tự động. Trước khi hoán đổi tài khoản, ứng dụng sẽ lưu trữ một bản snapshot của các cuộc hội thoại.
@@ -198,12 +252,14 @@ ProxySwicher/
 │   │   ├── AntigravityChatRestorer.cs    # Sao lưu & khôi phục lịch sử hội thoại
 │   │   ├── ChromeProfileManager.cs       # Đọc Local State, điều hướng shortcut Chrome
 │   │   ├── ProfileGuardService.cs        # Dịch vụ chạy ngầm bảo vệ Profile
+│   │   ├── GoogleOAuthAutoConsentService.cs # Tự động click & duyệt xác thực OAuth Google
 │   │   ├── AppConfig.cs                  # Quản lý cấu hình, lưu trữ & registry
 │   │   ├── ThemeManager.cs               # Quản lý chủ đề Dark/Light
 │   │   └── LocalizationManager.cs        # Quản lý ngôn ngữ Tiếng Việt / Tiếng Anh
 │   ├── MainWindow.xaml                   # Giao diện chính chuẩn Fluent WPF
 │   ├── MainWindow.xaml.cs                # Điều khiển logic hiển thị & tương tác UI
 │   ├── ModelQuotaWindow.xaml             # Bảng chi tiết hạn mức Model Quota
+│   ├── BatchSyncFloatingBar.xaml         # Thanh nổi HUD điều khiển đồng bộ
 │   ├── app.manifest                      # Khai báo đặc quyền Windows Administrator
 │   ├── installer.iss                     # Kịch bản đóng gói Inno Setup 6
 │   ├── build.bat                         # Kịch bản build tự động nhanh

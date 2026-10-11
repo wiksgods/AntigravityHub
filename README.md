@@ -30,11 +30,13 @@
 2. [Core Features](#-core-features)
    - [Subsystem 1: Antigravity AI Ecosystem & Quota Monitor](#1-antigravity-ai-ecosystem--quota-monitor)
    - [Subsystem 2: Google Chrome Profile & Workspace Manager](#2-google-chrome-profile--workspace-manager)
-   - [User Experience & Privacy Shield](#3-user-experience--privacy-shield)
+   - [Subsystem 3: Google-to-Antigravity 1-Click & Batch Sync](#3-google-to-antigravity-1-click--batch-sync)
+   - [Subsystem 4: User Experience & Privacy Shield](#4-user-experience--privacy-shield)
 3. [Download & Installation](#-download--installation)
 4. [User Guide](#-user-guide)
    - [Managing Antigravity AI Accounts & Quota](#managing-antigravity-ai-accounts--quota)
    - [Setting 3-Tier Default Chrome Profile](#setting-3-tier-default-chrome-profile)
+   - [Synchronizing Google Accounts to Antigravity (Batch Sync & Auto-Consent)](#synchronizing-google-accounts-to-antigravity-batch-sync--auto-consent)
    - [Chat Session Backup & Restoration](#chat-session-backup--restoration)
    - [Switching App Language (English / Vietnamese)](#switching-app-language-english--vietnamese)
 5. [Build & Packaging Guide](#-build--packaging-guide)
@@ -102,7 +104,50 @@ Engineered natively on **.NET 9.0 WPF**, the application boasts modern Windows 1
 
 ---
 
-### 3. User Experience & Privacy Shield
+### 3. Google-to-Antigravity 1-Click & Batch Sync
+
+Seamlessly bridge your Google Chrome profiles with the Antigravity AI ecosystem. Import logged-in Google identities and inject authorized OAuth credentials straight into Antigravity Hub with automated browser interaction.
+
+<p align="center">
+  <img src="demo/GoogleAccInProfile.png" alt="Google Accounts within Chrome Profile" width="96%" style="border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);" />
+  <br />
+  <em>📸 Profile Account Inspector: View all Google accounts inside any Chrome profile, check synchronization state, copy emails, or launch sync with 1 click</em>
+</p>
+
+* 🔍 **Deep Profile Account Discovery:**
+  - Instantly inspect and enumerate all signed-in Google accounts inside any selected Chrome profile without opening the browser.
+  - Clear visual synchronization badges indicate whether an account is already imported into Antigravity Hub or pending synchronization.
+  - Quick utility actions per account: Individual **Sync to Antigravity**, **Copy Email**, and Privacy Masking.
+
+<p align="center">
+  <img src="demo/SycnAntigravity1.png" alt="Batch Sync Confirmation & Pipeline Configuration" width="96%" style="border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);" />
+  <br />
+  <em>📸 Batch Sync Modal: Configure automated batch onboarding with Auto-Click Sign-in and Auto-Close tab workflows</em>
+</p>
+
+* ⚡ **High-Speed Batch Sync Pipeline:**
+  - Queue multiple Google accounts from a profile for automated sequential synchronization.
+  - Eliminates tedious repetitive manual sign-ins when managing large account pools.
+  - Configurable options: **Auto-Click Sign-in** (hands-free OAuth consent automation) and **Auto-Close Tab on Finish**.
+
+<p align="center">
+  <img src="demo/SycnAntigravity2.png" alt="Live Batch Sync Floating Bar and Real-Time Automation" width="96%" style="border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);" />
+  <br />
+  <em>📸 Batch Sync HUD & Live Telemetry: Floating progress bar docked during automated sign-in with Skip and Stop controls</em>
+</p>
+
+* 🤖 **Smart Auto-Consent & Auto-Click Sign-in (`GoogleOAuthAutoConsentService`):**
+  - Automates browser-level OAuth confirmation: detects account selection buttons, clicks consent prompts, and captures authentication tokens via a secure local loopback listener.
+  - Automatically closes the browser authentication tab as soon as tokens are secured.
+* 🪟 **Docked Batch Sync Floating Bar:**
+  - An unobtrusive, modern floating HUD displays real-time progress (`Account X of Y`, current email, visual progress meter) while docking near the top/bottom of the screen.
+  - Offers immediate control: **Skip** the current account or **Stop Sync** anytime without locking the main application or disturbing your IDE.
+* 🔒 **Local Token Security:**
+  - Tokens and credentials are stored strictly in local configuration files (`AppConfig` / local secure storage) with zero external relay servers.
+
+---
+
+### 4. User Experience & Privacy Shield
 
 * 🌐 **Full Bilingual Support (Instant Switch 🇻🇳 VI / 🇺🇸 EN):**
   - Instant toggle button located directly on the **top-right title bar**.
@@ -147,6 +192,15 @@ Choose between the two distribution options:
    - `Desktop/Taskbar shortcuts`: Updates all shortcuts.
    - `External links (Zalo, Mail)`: Routes external link clicks to this profile.
    - `Auto Protect Profile`: Enables the background watchdog service.
+
+### Synchronizing Google Accounts to Antigravity (Batch Sync & Auto-Consent)
+1. Go to the **🌐 Chrome** tab and locate the profile containing your desired Google accounts.
+2. Click the **Google Accounts** button on the profile card to open the **Account Inspector** popup (`demo/GoogleAccInProfile.png`).
+3. **Single Account Sync:** Click **Sync to Antigravity** next to any account to authenticate and import it individually.
+4. **Batch Sync:** Click **Sync All to Antigravity** at the top right to open the batch onboarding modal (`demo/SycnAntigravity1.png`).
+5. Ensure **Auto-Click Sign-in** is checked, then click **Start Sync**.
+6. The **Floating Sync Bar** (`demo/SycnAntigravity2.png`) will appear on your screen, guiding the automated process step-by-step. You can click **Skip** or **Stop** at any moment.
+7. Once finished, navigate back to the **🚀 Antigravity** tab to immediately view your new accounts and start managing their model quotas!
 
 ### Chat Session Backup & Restoration
 - This feature works fully automatically. Before switching accounts, the application snapshots your active conversation sessions.
@@ -198,12 +252,14 @@ ProxySwicher/
 │   │   ├── AntigravityChatRestorer.cs    # Conversation backup & restore engine
 │   │   ├── ChromeProfileManager.cs       # Local State parser & shortcut modifier
 │   │   ├── ProfileGuardService.cs        # Background watchdog process
+│   │   ├── GoogleOAuthAutoConsentService.cs # Smart browser auto-consent & OAuth login
 │   │   ├── AppConfig.cs                  # Settings persistence & auto-migration
 │   │   ├── ThemeManager.cs               # Fluent Light/Dark theme manager
 │   │   └── LocalizationManager.cs        # Bilingual dictionary manager (VI/EN)
 │   ├── MainWindow.xaml                   # Fluent WPF view declaration
 │   ├── MainWindow.xaml.cs                # View controller & interactive handlers
 │   ├── ModelQuotaWindow.xaml             # Detailed model quota telemetry window
+│   ├── BatchSyncFloatingBar.xaml         # Always-on-top batch sync HUD floating bar
 │   ├── app.manifest                      # Windows elevation manifest
 │   ├── installer.iss                     # Inno Setup 6 packaging script
 │   ├── build.bat                         # Fast build launcher
